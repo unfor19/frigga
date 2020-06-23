@@ -9,7 +9,7 @@ with open("version", "r") as fh:
 setup(
     author='Meir Gabay',
     author_email='unfor19@gmail.com',
-    name='draxprom',
+    name='frigga',
     license='MIT',
     long_description_content_type='text/markdown',
     description='Scrape only relevant metrics in Prometheus.',  # noqa: E501
@@ -18,8 +18,8 @@ setup(
     packages=find_packages(),
     keywords='prometheus grafana dashboard metrics',
     include_package_data=True,
-    url='https://github.com/unfor19/drax',
-    download_url=f'https://github.com/unfor19/drax/archive/v{version}.tar.gz',  # noqa: E501
+    url='https://github.com/unfor19/frigga',
+    download_url=f'https://github.com/unfor19/frigga/archive/v{version}.tar.gz',  # noqa: E501
     install_requires=[
         'Click>=7.1.1',
         'beautifulsoup4>=4.9.1',
@@ -27,7 +27,7 @@ setup(
     ],
     entry_points='''
         [console_scripts]
-        drax=scripts.drax:cli
+        frg=scripts.frigga:cli
     ''',
     setup_requires=[
         'setuptools>=44.1.0',

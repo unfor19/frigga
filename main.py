@@ -1,4 +1,4 @@
-from scripts import drax
+from scripts import frigga
 
 if __name__ == "__main__":
-    drax.cli()
+    frigga.cli()
