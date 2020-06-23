@@ -14,7 +14,7 @@ Python 3.6.7+
 ## Installation
 
 ```bash
-$ pip install draxprom
+$ pip install frigga
 ```
 
 ## Getting Started
