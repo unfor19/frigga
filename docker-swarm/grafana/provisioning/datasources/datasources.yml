@@ -1,0 +1,14 @@
+# Prometheus datasource
+# # config file version
+apiVersion: 1
+
+# # list of datasources to insert/update depending
+# # on what's available in the database
+datasources:
+  - name: Prometheus
+    version: 1
+    type: prometheus
+    access: direct
+    orgId: 1
+    url: http://prometheus:9090
+    editable: false
