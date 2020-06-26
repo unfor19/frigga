@@ -23,7 +23,8 @@ setup(
     install_requires=[
         'Click>=7.1.1',
         'beautifulsoup4>=4.9.1',
-        'requests>=2.23.0'
+        'requests>=2.23.0',
+        'PyYAML>=5.3.1'
     ],
     entry_points='''
         [console_scripts]
