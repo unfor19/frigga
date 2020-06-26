@@ -56,13 +56,14 @@ def get_metrics_from_expr(expression, ignored_words_list):
 
 def get_metrics_list(base_url, api_key):
     ignored_words = get_ignored_words()
-    print(ignored_words)
     dashboards = grafana_http_request(
         "/api/search?query=",
         api_key,
         base_url
     ).json()
-    metrics = dict()
+    data = {
+        "dashboards": {}
+    }
     for dashboard in dashboards:
         dashboard_body = grafana_http_request(
             f"/api/dashboards/uid/{dashboard['uid']}",
@@ -82,5 +83,11 @@ def get_metrics_list(base_url, api_key):
                             dashboard_metrics.append(metric)
         dashboard_metrics = list(set(dashboard_metrics))
         dashboard_metrics.sort()
-        metrics[dashboard_body['meta']['slug']] = dashboard_metrics
-    return metrics
+        dashboard_name = dashboard_body['meta']['slug']
+        dashboard_gnetid = dashboard_body['dashboard']['gnetId']
+        data['dashboards'][dashboard_name] = dict()
+        data['dashboards'][dashboard_name]['metrics'] = dashboard_metrics
+        data['dashboards'][dashboard_name]['gnet_id'] = dashboard_gnetid
+        data['dashboards'][dashboard_name]['num_metrics'] = len(
+            dashboard_metrics)
+    return data
