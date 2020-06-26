@@ -1,3 +1,4 @@
+import json
 import click
 from .grafana import get_metrics_list
 from .config import print_json
@@ -39,6 +40,7 @@ def cli(ci):
 @cli.command()
 @click.option('--grafana-url', '-gurl', prompt=True)
 @click.option('--grafana-api-key', '-gkey', prompt=True, hide_input=True)
+# @click.option('--file', '-f', prompt=False, default=".", help="Output metrics.json file to pwd")
 def metrics_get(grafana_url, grafana_api_key):
     """Provide Grafana UrL and Grafana API Key (Viewer)\n
 Returns a list of metrics that are used in all dashboards"""
@@ -46,3 +48,5 @@ Returns a list of metrics that are used in all dashboards"""
         raise Exception("Must contain 'http' or 'https'")
     metrics = get_metrics_list(grafana_url, grafana_api_key)
     print_json(metrics)
+    with open('.metrics.json', 'w') as file:
+        json.dump(metrics, file, indent=2, sort_keys=True)
