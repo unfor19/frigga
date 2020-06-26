@@ -27,7 +27,7 @@ setup(
     ],
     entry_points='''
         [console_scripts]
-        frg=scripts.frigga:cli
+        frigga=scripts.frigga:cli
     ''',
     setup_requires=[
         'setuptools>=44.1.0',
