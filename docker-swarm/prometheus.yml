@@ -15,11 +15,11 @@ scrape_configs:
     scrape_interval: 5s
     static_configs:
       - targets: ["node-exporter:9100"]
-    metric_relabel_configs:
-      - source_labels: [__name__]
-        regex: "^node_memory_Active_bytes"
-        target_label: __tmp_keep_me
-        replacement: true
-      - source_labels: [__tmp_keep_me]
-        regex: true
-        action: keep
+    # metric_relabel_configs:
+    #   - source_labels: [__name__]
+    #     regex: "^node_memory_Active_bytes"
+    #     target_label: __tmp_keep_me
+    #     replacement: true
+    #   - source_labels: [__tmp_keep_me]
+    #     regex: true
+    #     action: keep
