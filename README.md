@@ -1,7 +1,8 @@
 # frigga
 
-Scrape only relevant metrics in Prometheus, according to your Grafana dashboards, see the
-[Before and After snapshot](https://snapshot.raintank.io/dashboard/snapshot/p4YmuKHu4jBlA2kPmOhbuda3jo4I51bt?orgId=2)
+Scrape only relevant metrics in Prometheus, according to your Grafana dashboards, see the [before and after snapshot](https://snapshot.raintank.io/dashboard/snapshot/p4YmuKHu4jBlA2kPmOhbuda3jo4I51bt?orgId=2).
+
+This tool extermely useful for [Grafana Cloud](https://grafana.com/products/cloud/) customers, since you are charge per DataSeries ingested per month.
 
 ## Requirements
 
@@ -15,12 +16,13 @@ $ pip install frigga
 
 ## Getting Started
 
-1. Grafana - Before starting, import the dashboard [frigga - Jobs Usage](docker-swarm/grafana/provisioning/dashboards/jobs-usage.json) (ID: 12537) to Grafana, and check out the number of DataSeries
+1. Grafana - Import the dashboard [frigga - Jobs Usage](docker-swarm/grafana/provisioning/dashboards/jobs-usage.json) (ID: 12537) to Grafana, and check out your current number of DataSeries
 1. Grafana - Generate an API Key for `Viewer`
 1. Get the list of metrics that are in use in your dasboards
 
    ```bash
    $ frigga gl # gl is grafana-list, or good luck :)
+
    Grafana url [http://localhost:3000]: http://my-grafana.grafana.net
    Grafana api key: (hidden)
    >> [LOG] Getting the list of words to ignore when scraping from Grafana
@@ -54,6 +56,7 @@ $ pip install frigga
 
    ```bash
    $ frigga pa # pa is prometheus-apply, or pam-tada-dam
+
    Prom yaml path [docker-swarm/prometheus.yml]: /etc/prometheus/prometheus.yml
    Metrics json path [./.metrics.json]: /home/willywonka/.metrics.json
    >> [LOG] Reading documents from docker-swarm/prometheus.yml
@@ -71,11 +74,14 @@ $ pip install frigga
      $ curl -X POST http://localhost:9090/-/reload
      ```
 1. Make sure the `prometheus.yml` was loaded properly
+
    ```bash
    $ docker logs --tail 10 $PROM_CONTAINER_NAME
+
     level=info ts=2020-06-27T15:45:34.514Z caller=main.go:799 msg="Loading configuration file" filename=/etc/prometheus/prometheus.yml
     level=info ts=2020-06-27T15:45:34.686Z caller=main.go:827 msg="Completed loading of configuration file" filename=/etc/prometheus/prometheus.yml
    ```
+
 1. Grafana - Now check `frigga - Jobs Usage` dashboard, the numbers should be signifcantly lower (up to 60% or even more)
 
 ## Test it locally
@@ -90,14 +96,17 @@ $ pip install frigga
 
 1. git clone this repository
 1. Deploy locally the services: Prometheus, Grafana, node-exporter and cadvisor
+
    ```bash
    $ bash docker-swarm/deploy_stack.sh
+
    Creating network frigga_net1
    ...
    >> Grafana - Generating API Key - for Viewer
    eyJrIjoiT29hNGxGZjAwT2hZcU1BSmpPRXhndXVwUUE4ZVNFcGQiLCJuIjoibG9jYWwiLCJpZCI6MX0=
    # Save this key ^^^
    ```
+
 1. Open your browser, navigate to http://localhost:3000
 
    - Username and password are admin:admin
@@ -105,28 +114,37 @@ $ pip install frigga
 
 1. Go to [Jobs Usage](http://localhost:3000/d/U9Se3uZMz/jobs-usage?orgId=1) dashboard, you'll see that Prometheus is processing ~2800 DataSeries
 1. Let's change that! First get all the metrics that are used in your dasboards
+
    ```bash
    $ frigga gl -gurl http://localhost:3000 -gkey $GRAFANA_API_KEY
+
    >> [LOG] Getting the list of words to ignore when scraping from Grafana
    ...
    >> [LOG] Found a total of 269 unique metrics to keep
    # Generated .metrics.json in pwd
    ```
+
 1. Apply the rules to `prometheus.yml`, keep the defaults
+
    ```bash
    $ frigga pa # prometheus-apply
+
    Prom yaml path [docker-swarm/prometheus.yml]:
    Metrics json path [./.metrics.json]:
    ...
    >> [LOG] Done! Now reload docker-swarm/prometheus.yml with 'docker exec $PROM_CONTAINER_NAME kill -HUP 1'
    ```
+
 1. Reload `prometheus.yml` to Prometheus
+
    ```bash
    $ bash docker-swarm/reload_prom_config.sh show
+
    >> Reloading prometheus.yml configuration file
    ...
    level=info ts=2020-06-27T16:25:17.656Z caller=main.go:827 msg="Completed loading of configuration file" filename=/etc/prometheus/prometheus.yml
    ```
+
 1. Go to [Jobs Usage](http://localhost:3000/d/U9Se3uZMz/jobs-usage?orgId=1), you'll see that Prometheus is processing only ~1000 DataSeries (previously ~2800)
    - In case you don't see the change, don't forget to hit the refersh button
 1. Cleanup
