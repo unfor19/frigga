@@ -38,6 +38,7 @@ def get_ignored_words():
 
 
 def apply_yaml(prom_yaml_path, metrics_json_path, create_backup_file=True):
+    print_msg(msg_content=f"Reading documents from {prom_yaml_path}")
     with open(prom_yaml_path, "r") as file:
         prom_yaml = file.read()
     prom_documents = yaml.safe_load_all(prom_yaml)
@@ -54,9 +55,12 @@ def apply_yaml(prom_yaml_path, metrics_json_path, create_backup_file=True):
     if not frigga_doc:
         print_msg(
             msg_content="Missing frigga document in prometheus.yml", msg_type="error")
+    print_msg(msg_content=f"Found relevant documents")
+    print_msg(msg_content=f"Loading metrics.json")
     with open(metrics_json_path, "r") as file:
         metrics_dict = json.load(file)
 
+    print_msg(msg_content=f"Generating metrics_relabel_configs in memory")
     metric_relabel_configs = []
     for metric in metrics_dict['all_metrics']:
         metric_relabel_configs.append({
@@ -79,11 +83,14 @@ def apply_yaml(prom_yaml_path, metrics_json_path, create_backup_file=True):
 
     # backup old prom yaml
     if create_backup_file:
+        print_msg(msg_content=f"Creating a backup file for {prom_yaml_path}")
         with open(prom_yaml_path, 'r') as source_fs:
             with open(f"{prom_yaml_path}.bak.yml", 'w') as target_fs:
                 target_fs.write(source_fs.read())
 
     # write new prom frigga yaml
+    print_msg(
+        msg_content=f"Writing the new metrics_relabel_configs to {prom_yaml_path}")
     with open(prom_yaml_path, 'w') as fs:
         data = yaml.dump_all(
             documents=[prom_doc, frigga_doc],
@@ -91,3 +98,5 @@ def apply_yaml(prom_yaml_path, metrics_json_path, create_backup_file=True):
             Dumper=noalias_dumper,
             indent=2
         )
+    print_msg(
+        msg_content=f"Done! Now reload {prom_yaml_path} with 'docker exec $PROM_CONTAINER_NAME kill -HUP 1'")
