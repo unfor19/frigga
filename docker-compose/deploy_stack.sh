@@ -23,8 +23,10 @@ grafana_update_admin_password(){
 
 network=$(docker network ls | grep frigga_net)
 [[ ! -z $network ]] && echo "ERROR: wait for network to be deleted, docker network ls, or restart docker daemon" && exit
-cp docker-swarm/prometheus-original.yml docker-swarm/prometheus.yml
-HOSTNAME=$(hostname) docker stack deploy -c docker-swarm/docker-stack.yml frigga
+cp docker-compose/prometheus-original.yml docker-compose/prometheus.yml
+docker-compose --project-name frigga \
+    --file docker-compose/docker-compose.yml \
+    up --detach
 
 echo ">> Waiting for Grafana to be ready ..."
 counter=0

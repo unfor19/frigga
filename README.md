@@ -16,7 +16,7 @@ $ pip install frigga
 
 ## Getting Started
 
-1. Grafana - Import the dashboard [frigga - Jobs Usage](docker-swarm/grafana/provisioning/dashboards/jobs-usage.json) (ID: 12537) to Grafana, and check out your current number of DataSeries
+1. Grafana - Import the dashboard [frigga - Jobs Usage](docker-compose/grafana/provisioning/dashboards/jobs-usage.json) (ID: 12537) to Grafana, and check out your current number of DataSeries
 1. Grafana - Generate an API Key for `Viewer`
 1. Get the list of metrics that are in use in your dasboards
 
@@ -44,7 +44,7 @@ $ pip install frigga
    }
    ```
 
-1. Edit your `prometheus.yml` file, add the following snippet to the bottom of the file. Check the example in [docker-swarm/prometheus-original.yml](docker-swarm/prometheus-original.yml)
+1. Edit your `prometheus.yml` file, add the following snippet to the bottom of the file. Check the example in [docker-compose/prometheus-original.yml](docker-compose/prometheus-original.yml)
 
    ```yml
     ---
@@ -57,11 +57,11 @@ $ pip install frigga
    ```bash
    $ frigga pa # pa is prometheus-apply, or pam-tada-dam
 
-   Prom yaml path [docker-swarm/prometheus.yml]: /etc/prometheus/prometheus.yml
+   Prom yaml path [docker-compose/prometheus.yml]: /etc/prometheus/prometheus.yml
    Metrics json path [./.metrics.json]: /home/willywonka/.metrics.json
-   >> [LOG] Reading documents from docker-swarm/prometheus.yml
+   >> [LOG] Reading documents from docker-compose/prometheus.yml
    ...
-   >> [LOG] Done! Now reload docker-swarm/prometheus.yml with 'docker exec $PROM_CONTAINER_NAME kill -HUP 1'
+   >> [LOG] Done! Now reload docker-compose/prometheus.yml with 'docker exec $PROM_CONTAINER_NAME kill -HUP 1'
    ```
 
 1. As mentioned in the previous step, reload the `prometheus.yml` file, here are two ways of doing it
@@ -69,7 +69,7 @@ $ pip install frigga
      ```bash
      $ docker exec $PROM_CONTAINER_NAME kill -HUP 1
      ```
-   - Sending a POST request to `/-/reload` - this requires prometheus to be loaded with `--web.enable-lifecycle`, for example, see [docker-stack.yml](docker-swarm/docker-stack.yml)
+   - Sending a POST request to `/-/reload` - this requires prometheus to be loaded with `--web.enable-lifecycle`, for example, see [docker-stack.yml](docker-compose/docker-stack.yml)
      ```bash
      $ curl -X POST http://localhost:9090/-/reload
      ```
@@ -98,7 +98,7 @@ $ pip install frigga
 1. Deploy locally the services: Prometheus, Grafana, node-exporter and cadvisor
 
    ```bash
-   $ bash docker-swarm/deploy_stack.sh
+   $ bash docker-compose/deploy_stack.sh
 
    Creating network frigga_net1
    ...
@@ -129,16 +129,16 @@ $ pip install frigga
    ```bash
    $ frigga pa # prometheus-apply
 
-   Prom yaml path [docker-swarm/prometheus.yml]:
+   Prom yaml path [docker-compose/prometheus.yml]:
    Metrics json path [./.metrics.json]:
    ...
-   >> [LOG] Done! Now reload docker-swarm/prometheus.yml with 'docker exec $PROM_CONTAINER_NAME kill -HUP 1'
+   >> [LOG] Done! Now reload docker-compose/prometheus.yml with 'docker exec $PROM_CONTAINER_NAME kill -HUP 1'
    ```
 
 1. Reload `prometheus.yml` to Prometheus
 
    ```bash
-   $ bash docker-swarm/reload_prom_config.sh show
+   $ bash docker-compose/reload_prom_config.sh show
 
    >> Reloading prometheus.yml configuration file
    ...
@@ -149,7 +149,7 @@ $ pip install frigga
    - In case you don't see the change, don't forget to hit the refersh button
 1. Cleanup
    ```bash
-   $ docker stack rm frigga
+   $ docker-compose -p frigga --file docker-compose/docker-compose.yml down
    ```
 
 ## Pros and Cons of this tool
