@@ -100,8 +100,7 @@ def get_metrics_list(base_url, api_key):
                     except:  # noqa: 722
                         if len(metric) > 5 and "/" not in metric:
                             dashboard_metrics.append(metric)
-        dashboard_metrics = list(set(dashboard_metrics))
-        dashboard_metrics.sort()
+        dashboard_metrics = sorted(list(set(dashboard_metrics)))
         dashboard_gnetid = dashboard_body['dashboard']['gnetId']
         data['dashboards'][dashboard_name] = dict()
         data['dashboards'][dashboard_name]['metrics'] = dashboard_metrics
