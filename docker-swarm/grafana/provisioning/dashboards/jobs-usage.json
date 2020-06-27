@@ -35,10 +35,11 @@
               },
               {
                 "color": "red",
-                "value": 80
+                "value": 200
               }
             ]
-          }
+          },
+          "unit": "none"
         },
         "overrides": []
       },
@@ -52,12 +53,12 @@
       "options": {
         "colorMode": "value",
         "graphMode": "area",
-        "justifyMode": "auto",
+        "justifyMode": "center",
         "orientation": "auto",
         "reduceOptions": {
           "calcs": ["mean"],
           "fields": "",
-          "values": false
+          "values": true
         }
       },
       "pluginVersion": "7.0.3",
@@ -66,7 +67,7 @@
           "expr": "topk(20, count by (job)({__name__=~\".+\"}))",
           "format": "time_series",
           "instant": true,
-          "interval": "",
+          "interval": "1",
           "intervalFactor": 3,
           "legendFormat": "{{job}}",
           "refId": "A"
@@ -74,7 +75,7 @@
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "DataPoints Per Job",
+      "title": "DataSeries Per Job",
       "type": "stat"
     },
     {
@@ -217,5 +218,5 @@
   "timezone": "",
   "title": "Jobs Usage",
   "uid": "U9Se3uZMz",
-  "version": 6
+  "version": 2
 }
