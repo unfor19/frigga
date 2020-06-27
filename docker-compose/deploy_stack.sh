@@ -8,7 +8,7 @@ generate_apikey(){
         --data '{"name":"local","role":"Viewer","secondsToLive":86400}' \
         http://localhost:3000/api/auth/keys | jq -r .key)
     echo $apikey
-    [[ -z $FRIGGA_TESTING ]] && echo $apikey > .apikey
+    [[ ! -z $FRIGGA_TESTING ]] && echo $apikey > .apikey
 }
 
 grafana_update_admin_password(){
