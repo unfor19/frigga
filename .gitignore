@@ -9,3 +9,4 @@ build/
 !.drone.yml
 docker-swarm/data/*
 !docker-swarm/data/empty
+*.bak.*

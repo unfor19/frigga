@@ -2,12 +2,14 @@ import json
 import click
 from .grafana import get_metrics_list
 from .config import print_json
+from .prometheus import create_yaml
 
 
 class AliasedGroup(click.Group):
     def get_command(self, ctx, cmd_name):
         aliases = {
             "m": "metrics",
+            "p": "prometheus",
             "a": "apply",
             "g": "get",
             "d": "delete",
@@ -47,6 +49,16 @@ Returns a list of metrics that are used in all dashboards"""
     if "http" not in grafana_url:
         raise Exception("Must contain 'http' or 'https'")
     metrics = get_metrics_list(grafana_url, grafana_api_key)
-    print_json(metrics)
+    all_metrics = []
+    for dashboard_name in metrics['dashboards']:
+        all_metrics += metrics['dashboards'][dashboard_name]['metrics']
+    metrics['all_metrics'] = sorted(list(set(all_metrics)))
+    metrics['all_metrics_num'] = len(metrics['all_metrics'])
+    # print_json(metrics)
     with open('.metrics.json', 'w') as file:
         json.dump(metrics, file, indent=2, sort_keys=True)
+
+
+@cli.command()
+def prometheus_create():
+    create_yaml()

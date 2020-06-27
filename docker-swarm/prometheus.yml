@@ -1,25 +1,1939 @@
 global:
-  scrape_interval: 15s
   evaluation_interval: 15s
-
   external_labels:
-    monitor: "my-project"
-
+    monitor: my-project
+  scrape_interval: 15s
 scrape_configs:
-  - job_name: "cadvisor"
-    scrape_interval: 5s
-    static_configs:
-      - targets: ["cadvisor:8080"]
-
-  - job_name: "node-exporter"
-    scrape_interval: 5s
-    static_configs:
-      - targets: ["node-exporter:9100"]
-    # metric_relabel_configs:
-    #   - source_labels: [__name__]
-    #     regex: "^node_memory_Active_bytes"
-    #     target_label: __tmp_keep_me
-    #     replacement: true
-    #   - source_labels: [__tmp_keep_me]
-    #     regex: true
-    #     action: keep
+- job_name: cadvisor
+  metric_relabel_configs:
+  - regex: ^container_fs_reads_bytes_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^container_fs_writes_bytes_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^container_memory_usage_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_arp_entries
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_context_switches_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_cooling_device_cur_state
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_cooling_device_max_state
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_disk_discard_time_seconds_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_disk_discards_completed_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_disk_discards_merged_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_disk_io_now
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_disk_io_time_seconds_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_disk_io_time_weighted_seconds_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_disk_read_bytes_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_disk_read_time_seconds_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_disk_reads_completed_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_disk_reads_merged_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_disk_write_time_seconds_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_disk_writes_completed_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_disk_writes_merged_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_disk_written_bytes_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_entropy_available_bits
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_filefd_allocated
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_filefd_maximum
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_filesystem_avail_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_filesystem_device_error
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_filesystem_files
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_filesystem_files_free
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_filesystem_free_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_filesystem_readonly
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_filesystem_size_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_forks_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_hwmon_temp_celsius
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_hwmon_temp_crit_alarm_celsius
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_hwmon_temp_crit_celsius
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_hwmon_temp_crit_hyst_celsius
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_hwmon_temp_max_celsius
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_interrupts_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_intr_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_load1
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_load15
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_load5
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_Active_anon_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_Active_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_Active_file_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_AnonHugePages_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_AnonPages_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_Bounce_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_Buffers_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_Cached_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_CommitLimit_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_Committed_AS_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_DirectMap1G_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_DirectMap2M_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_DirectMap4k_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_Dirty_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_HardwareCorrupted_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_HugePages_Free
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_HugePages_Rsvd
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_HugePages_Surp
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_HugePages_Total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_Hugepagesize_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_Inactive_anon_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_Inactive_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_Inactive_file_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_KernelStack_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_Mapped_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_MemFree_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_MemTotal_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_Mlocked_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_NFS_Unstable_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_PageTables_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_Percpu_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_SReclaimable_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_SUnreclaim_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_ShmemHugePages_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_ShmemPmdMapped_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_Shmem_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_Slab_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_SwapCached_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_SwapTotal_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_Unevictable_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_VmallocChunk_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_VmallocTotal_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_VmallocUsed_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_WritebackTmp_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_Writeback_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_netstat_Icmp_InErrors
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_netstat_Icmp_InMsgs
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_netstat_Icmp_OutMsgs
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_netstat_IpExt_InOctets
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_netstat_IpExt_OutOctets
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_netstat_Ip_Forwarding
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_netstat_TcpExt_ListenDrops
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_netstat_TcpExt_ListenOverflows
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_netstat_TcpExt_SyncookiesFailed
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_netstat_TcpExt_SyncookiesRecv
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_netstat_TcpExt_SyncookiesSent
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_netstat_TcpExt_TCPSynRetrans
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_netstat_Tcp_ActiveOpens
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_netstat_Tcp_CurrEstab
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_netstat_Tcp_InErrs
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_netstat_Tcp_InSegs
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_netstat_Tcp_MaxConn
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_netstat_Tcp_OutSegs
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_netstat_Tcp_PassiveOpens
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_netstat_Tcp_RetransSegs
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_netstat_UdpLite_InErrors
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_netstat_Udp_InDatagrams
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_netstat_Udp_InErrors
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_netstat_Udp_NoPorts
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_netstat_Udp_OutDatagrams
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_netstat_Udp_RcvbufErrors
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_netstat_Udp_SndbufErrors
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_network_carrier
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_network_mtu_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_network_receive_bytes_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_network_receive_compressed_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_network_receive_drop_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_network_receive_errs_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_network_receive_fifo_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_network_receive_frame_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_network_receive_multicast_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_network_receive_packets_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_network_speed_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_network_transmit_bytes_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_network_transmit_carrier_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_network_transmit_colls_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_network_transmit_compressed_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_network_transmit_drop_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_network_transmit_errs_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_network_transmit_fifo_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_network_transmit_packets_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_network_transmit_queue_length
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_network_up
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_nf_conntrack_entries
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_nf_conntrack_entries_limit
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_power_supply_online
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_processes_max_processes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_processes_max_threads
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_processes_pids
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_processes_state
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_processes_threads
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_procs_blocked
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_procs_running
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_schedstat_running_seconds_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_schedstat_timeslices_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_schedstat_waiting_seconds_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_scrape_collector_duration_seconds
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_scrape_collector_success
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_sockstat_FRAG_inuse
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_sockstat_FRAG_memory
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_sockstat_RAW_inuse
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_sockstat_TCP_alloc
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_sockstat_TCP_inuse
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_sockstat_TCP_mem
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_sockstat_TCP_mem_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_sockstat_TCP_orphan
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_sockstat_TCP_tw
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_sockstat_UDPLITE_inuse
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_sockstat_UDP_inuse
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_sockstat_UDP_mem
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_sockstat_UDP_mem_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_sockstat_sockets_used
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_softnet_dropped_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_softnet_processed_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_softnet_times_squeezed_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_systemd_socket_accepted_connections_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_systemd_units
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_textfile_scrape_error
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_timex_estimated_error_seconds
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_timex_frequency_adjustment_ratio
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_timex_loop_time_constant
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_timex_maxerror_seconds
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_timex_offset_seconds
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_timex_sync_status
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_timex_tai_offset_seconds
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_timex_tick_seconds
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_vmstat_oom_kill
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_vmstat_pgfault
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_vmstat_pgmajfault
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_vmstat_pgpgin
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_vmstat_pgpgout
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_vmstat_pswpin
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_vmstat_pswpout
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^process_cpu_seconds_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^process_max_fds
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^process_open_fds
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^process_resident_memory_max_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^process_virtual_memory_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^process_virtual_memory_max_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - action: keep
+    regex: true
+    source_labels:
+    - __tmp_keep_me
+  scrape_interval: 5s
+  static_configs:
+  - targets:
+    - cadvisor:8080
+- job_name: node-exporter
+  metric_relabel_configs:
+  - regex: ^container_fs_reads_bytes_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^container_fs_writes_bytes_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^container_memory_usage_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_arp_entries
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_context_switches_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_cooling_device_cur_state
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_cooling_device_max_state
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_disk_discard_time_seconds_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_disk_discards_completed_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_disk_discards_merged_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_disk_io_now
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_disk_io_time_seconds_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_disk_io_time_weighted_seconds_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_disk_read_bytes_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_disk_read_time_seconds_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_disk_reads_completed_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_disk_reads_merged_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_disk_write_time_seconds_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_disk_writes_completed_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_disk_writes_merged_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_disk_written_bytes_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_entropy_available_bits
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_filefd_allocated
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_filefd_maximum
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_filesystem_avail_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_filesystem_device_error
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_filesystem_files
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_filesystem_files_free
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_filesystem_free_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_filesystem_readonly
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_filesystem_size_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_forks_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_hwmon_temp_celsius
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_hwmon_temp_crit_alarm_celsius
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_hwmon_temp_crit_celsius
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_hwmon_temp_crit_hyst_celsius
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_hwmon_temp_max_celsius
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_interrupts_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_intr_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_load1
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_load15
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_load5
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_Active_anon_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_Active_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_Active_file_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_AnonHugePages_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_AnonPages_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_Bounce_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_Buffers_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_Cached_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_CommitLimit_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_Committed_AS_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_DirectMap1G_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_DirectMap2M_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_DirectMap4k_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_Dirty_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_HardwareCorrupted_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_HugePages_Free
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_HugePages_Rsvd
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_HugePages_Surp
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_HugePages_Total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_Hugepagesize_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_Inactive_anon_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_Inactive_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_Inactive_file_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_KernelStack_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_Mapped_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_MemFree_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_MemTotal_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_Mlocked_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_NFS_Unstable_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_PageTables_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_Percpu_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_SReclaimable_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_SUnreclaim_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_ShmemHugePages_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_ShmemPmdMapped_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_Shmem_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_Slab_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_SwapCached_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_SwapTotal_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_Unevictable_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_VmallocChunk_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_VmallocTotal_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_VmallocUsed_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_WritebackTmp_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_memory_Writeback_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_netstat_Icmp_InErrors
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_netstat_Icmp_InMsgs
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_netstat_Icmp_OutMsgs
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_netstat_IpExt_InOctets
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_netstat_IpExt_OutOctets
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_netstat_Ip_Forwarding
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_netstat_TcpExt_ListenDrops
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_netstat_TcpExt_ListenOverflows
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_netstat_TcpExt_SyncookiesFailed
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_netstat_TcpExt_SyncookiesRecv
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_netstat_TcpExt_SyncookiesSent
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_netstat_TcpExt_TCPSynRetrans
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_netstat_Tcp_ActiveOpens
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_netstat_Tcp_CurrEstab
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_netstat_Tcp_InErrs
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_netstat_Tcp_InSegs
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_netstat_Tcp_MaxConn
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_netstat_Tcp_OutSegs
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_netstat_Tcp_PassiveOpens
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_netstat_Tcp_RetransSegs
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_netstat_UdpLite_InErrors
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_netstat_Udp_InDatagrams
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_netstat_Udp_InErrors
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_netstat_Udp_NoPorts
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_netstat_Udp_OutDatagrams
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_netstat_Udp_RcvbufErrors
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_netstat_Udp_SndbufErrors
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_network_carrier
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_network_mtu_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_network_receive_bytes_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_network_receive_compressed_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_network_receive_drop_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_network_receive_errs_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_network_receive_fifo_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_network_receive_frame_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_network_receive_multicast_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_network_receive_packets_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_network_speed_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_network_transmit_bytes_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_network_transmit_carrier_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_network_transmit_colls_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_network_transmit_compressed_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_network_transmit_drop_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_network_transmit_errs_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_network_transmit_fifo_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_network_transmit_packets_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_network_transmit_queue_length
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_network_up
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_nf_conntrack_entries
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_nf_conntrack_entries_limit
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_power_supply_online
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_processes_max_processes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_processes_max_threads
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_processes_pids
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_processes_state
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_processes_threads
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_procs_blocked
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_procs_running
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_schedstat_running_seconds_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_schedstat_timeslices_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_schedstat_waiting_seconds_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_scrape_collector_duration_seconds
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_scrape_collector_success
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_sockstat_FRAG_inuse
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_sockstat_FRAG_memory
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_sockstat_RAW_inuse
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_sockstat_TCP_alloc
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_sockstat_TCP_inuse
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_sockstat_TCP_mem
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_sockstat_TCP_mem_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_sockstat_TCP_orphan
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_sockstat_TCP_tw
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_sockstat_UDPLITE_inuse
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_sockstat_UDP_inuse
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_sockstat_UDP_mem
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_sockstat_UDP_mem_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_sockstat_sockets_used
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_softnet_dropped_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_softnet_processed_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_softnet_times_squeezed_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_systemd_socket_accepted_connections_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_systemd_units
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_textfile_scrape_error
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_timex_estimated_error_seconds
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_timex_frequency_adjustment_ratio
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_timex_loop_time_constant
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_timex_maxerror_seconds
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_timex_offset_seconds
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_timex_sync_status
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_timex_tai_offset_seconds
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_timex_tick_seconds
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_vmstat_oom_kill
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_vmstat_pgfault
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_vmstat_pgmajfault
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_vmstat_pgpgin
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_vmstat_pgpgout
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_vmstat_pswpin
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^node_vmstat_pswpout
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^process_cpu_seconds_total
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^process_max_fds
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^process_open_fds
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^process_resident_memory_max_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^process_virtual_memory_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - regex: ^process_virtual_memory_max_bytes
+    replacement: true
+    source_labels:
+    - __name__
+    target_label: __tmp_keep_me
+  - action: keep
+    regex: true
+    source_labels:
+    - __tmp_keep_me
+  scrape_interval: 5s
+  static_configs:
+  - targets:
+    - node-exporter:9100
+---
+exclude_jobs: []
+name: frigga
