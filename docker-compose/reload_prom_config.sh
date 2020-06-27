@@ -2,7 +2,7 @@
 show_logs=$1
 filter=frigga_prometheus
 prom_container_name=$(docker ps --filter name=${filter} --format "{{.Names}}")
-[[ -z ${prom_container_name} ]] && echo "The container ${filter} is not running, execute first docker-swarm/deploy_stack.sh"
+[[ -z ${prom_container_name} ]] && echo "The container ${filter} is not running, execute first docker-compose/deploy_stack.sh"
 
 echo ">> Reloading prometheus.yml configuration file"
 reloaded=$(docker exec ${prom_container_name} kill -HUP 1)
