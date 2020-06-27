@@ -2,7 +2,7 @@
 
 Scrape only relevant metrics in Prometheus, according to your Grafana dashboards, see the [before and after snapshot](https://snapshot.raintank.io/dashboard/snapshot/p4YmuKHu4jBlA2kPmOhbuda3jo4I51bt?orgId=2).
 
-This tool extermely useful for [Grafana Cloud](https://grafana.com/products/cloud/) customers, since you are charge per DataSeries ingested per month.
+This tool extermely useful for [Grafana Cloud](https://grafana.com/products/cloud/) customers, since the pricing is per DataSeries ingestions.
 
 ## Requirements
 
