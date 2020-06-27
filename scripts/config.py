@@ -10,6 +10,25 @@ def is_docker():
     )
 
 
+def print_msg(msg_content, data=None, msg_type='l'):
+    if msg_type == "data" or msg_type == "d":
+        msg = f">> {msg_content}\nData:\n"
+    elif msg_type == "error" or msg_type == "e":
+        msg = f">> [ERROR] {msg_content}"
+    elif msg_type == "warning" or msg_type == "w":
+        msg = f">> [WARNING] {msg_content}"
+    elif msg_type == "log" or msg_type == "l":
+        msg = f">> [LOG] {msg_content}"
+
+    if data:
+        if isinstance(data, dict) or isinstance(data, list):
+            print(f"{msg}\n{json.dumps(data, indent=2, sort_keys=True)}")
+        else:
+            print(f"{msg} {data}")
+    else:
+        print(msg)
+
+
 def print_json(obj):
     print(json.dumps(obj, indent=2, sort_keys=True))
 
