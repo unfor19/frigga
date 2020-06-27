@@ -27,12 +27,17 @@ def get_ignored_words():
         msg_content="Getting the list of words to ignore when scraping from Grafana")
     words_list = []
 
-    try:
-        with open("data.json", "r") as file:
-            data_file = json.load(file)
-    except:
-        print_json(msg_content="Can't read data.json file", msg_type="error")
-    for item in data_file["data"]["prometheus_urls"]:
+    prometheus_urls = [
+        {
+            "url": "https://prometheus.io/docs/prometheus/latest/querying/functions/",
+            "selectors": ".toc-right ul li code"
+        },
+        {
+            "url": "https://prometheus.io/docs/prometheus/latest/querying/operators/",
+            "selectors": "ul li code"
+        }
+    ]
+    for item in prometheus_urls:
         words_list += request_words(item["url"], item["selectors"])
     return sorted(list(set(words_list)))
 
