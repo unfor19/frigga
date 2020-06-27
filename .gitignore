@@ -10,3 +10,4 @@ build/
 docker-swarm/data/*
 !docker-swarm/data/empty
 *.bak.*
+docker-swarm/prometheus.yml
