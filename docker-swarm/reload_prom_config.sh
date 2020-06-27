@@ -7,7 +7,8 @@ prom_container_name=$(docker ps --filter name=${filter} --format "{{.Names}}")
 echo ">> Reloading prometheus.yml configuration file"
 reloaded=$(docker exec ${prom_container_name} kill -HUP 1)
 if [[ -z ${reloaded} ]]; then
-    echo ">> Reloaded"
+    echo ">> Reloaded, sleeping 5 seconds"
+    sleep 5
     [[ ! -z ${show_logs} ]] && docker logs --tail 10 ${prom_container_name}
 else
     echo ${reloaded}
