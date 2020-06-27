@@ -12,7 +12,7 @@ setup(
     name='frigga',
     license='MIT',
     long_description_content_type='text/markdown',
-    description='Scrape only relevant metrics in Prometheus',  # noqa: E501
+    description='Scrape only relevant metrics in Prometheus, according to your Grafana dashboards',  # noqa: E501
     long_description=readme,
     version=f'{version}',
     packages=find_packages(),
