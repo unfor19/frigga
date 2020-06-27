@@ -12,11 +12,11 @@ setup(
     name='frigga',
     license='MIT',
     long_description_content_type='text/markdown',
-    description='Scrape only relevant metrics in Prometheus.',  # noqa: E501
+    description='Scrape only relevant metrics in Prometheus',  # noqa: E501
     long_description=readme,
     version=f'{version}',
     packages=find_packages(),
-    keywords='prometheus grafana dashboard metrics',
+    keywords='prometheus grafana dashboard metrics monitor cloud',
     include_package_data=True,
     url='https://github.com/unfor19/frigga',
     download_url=f'https://github.com/unfor19/frigga/archive/v{version}.tar.gz',  # noqa: E501
