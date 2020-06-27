@@ -22,4 +22,4 @@ jobs:
           FRIGGA_TESTING: true
         run: bash docker-compose/deploy_stack.sh
       - name: Apply Changes
-        run: bash docker-compose/run_tests.sh
+        run: bash docker-compose/apply_changes.sh
