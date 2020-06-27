@@ -7,17 +7,25 @@ from .prometheus import create_yaml
 
 class AliasedGroup(click.Group):
     def get_command(self, ctx, cmd_name):
-        aliases = {
-            "m": "metrics",
+        app_aliases = {
+            "m": "main",
             "p": "prometheus",
+            "g": "grafana",
+        }
+        action_aliases = {
             "a": "apply",
             "g": "get",
             "d": "delete",
             "l": "list",
         }
         if len(cmd_name) == 2:
-            words = [aliases[char] for char in cmd_name if char in aliases]
-            cmd_name = "-".join(words)
+            words = []
+            if cmd_name[0] in app_aliases:
+                words.append(app_aliases[cmd_name[0]])
+            if cmd_name[1] in action_aliases:
+                words.append(action_aliases[cmd_name[1]])
+            if len(words) == 2:
+                cmd_name = "-".join(words)
 
         rv = click.Group.get_command(self, ctx, cmd_name)
         if rv is not None:
@@ -43,7 +51,7 @@ def cli(ci):
 @click.option('--grafana-url', '-gurl', prompt=True)
 @click.option('--grafana-api-key', '-gkey', prompt=True, hide_input=True)
 # @click.option('--file', '-f', prompt=False, default=".", help="Output metrics.json file to pwd")
-def metrics_get(grafana_url, grafana_api_key):
+def grafana_list(grafana_url, grafana_api_key):
     """Provide Grafana UrL and Grafana API Key (Viewer)\n
 Returns a list of metrics that are used in all dashboards"""
     if "http" not in grafana_url:
@@ -60,5 +68,5 @@ Returns a list of metrics that are used in all dashboards"""
 
 
 @cli.command()
-def prometheus_create():
+def prometheus_apply():
     create_yaml()
