@@ -25,7 +25,6 @@ def grafana_http_request(path, api_key, base_url="http://localhost:3000"):
 
 
 def get_metrics_from_expr(expression, ignored_words_list):
-
     # Remove all [] and {}
     regex_patterns = [
         r"\{(.+?)\}",
@@ -44,7 +43,7 @@ def get_metrics_from_expr(expression, ignored_words_list):
 
     # Remove all the ignored_words
     for item in ignored_words_list:
-        pattern = r"[ \(\)\{\}]" + item + r"[ \(\)\{\}]"
+        pattern = r"[\(\)\{\}]" + item + r"[ \(\)\{\}]"
         results = re.findall(pattern, expression)
         if results:
             results = list(set(results))
@@ -57,7 +56,8 @@ def get_metrics_from_expr(expression, ignored_words_list):
 
     # Remove leftovers
     # TODO: Avoid this loop, cleanup in previous step
-    math_signs = ["*", "-", "+", "^", "/", "]", "[", "{", "}"]
+    math_signs = ["*", "-", "+", "^", "/", "]",
+                  "[", "{", "}", "__", ",", "=", "\\", "'", '"', "_over_time"]
     for sign in math_signs:
         expression = expression.replace(sign, " ")
     metrics = expression.split()
@@ -89,6 +89,7 @@ def get_metrics_list(base_url, api_key):
         dashboard_name = dashboard_body['meta']['slug']
         print_msg(msg_content=f"Getting metrics from {dashboard_name}")
         expressions = scrape_value_by_key(dashboard_body, "expr")
+        expressions += scrape_value_by_key(dashboard_body, "query")
         dashboard_metrics = []
         for expression in expressions:
             expr_metrics = get_metrics_from_expr(expression, ignored_words)
