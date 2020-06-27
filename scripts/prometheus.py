@@ -9,7 +9,7 @@ def request_words(url, selector, replace_str="()", replace_with=""):
     response = requests.get(url)
     if 200 <= response.status_code < 400:
         print_msg(
-            msg_content=f"Successful response from {url}", msg_type='log')
+            msg_content=f"Successfully got words from {url}", msg_type='log')
     else:
         print_msg(
             msg_content=f"Failed to reach {url}, have you provided the '--web.enable-admin-api' in Prometheus?")
@@ -37,9 +37,7 @@ def get_ignored_words():
     return sorted(list(set(words_list)))
 
 
-def create_yaml():
-    prom_yaml_path = "docker-swarm/prometheus.yml"
-    metrics_path = ".metrics.json"
+def apply_yaml(prom_yaml_path, metrics_json_path, create_backup_file=True):
     with open(prom_yaml_path, "r") as file:
         prom_yaml = file.read()
     prom_documents = yaml.safe_load_all(prom_yaml)
@@ -50,10 +48,13 @@ def create_yaml():
             prom_doc = doc
         elif 'name' in doc and doc['name'] == 'frigga':
             frigga_doc = doc
-    if not prom_doc or not frigga_doc:
-        print("not good")
-        exit()
-    with open(metrics_path, "r") as file:
+    if not prom_doc:
+        print_msg(
+            msg_content="Missing 'scrape_configs' in prometheus.yml", msg_type="error")
+    if not frigga_doc:
+        print_msg(
+            msg_content="Missing frigga document in prometheus.yml", msg_type="error")
+    with open(metrics_json_path, "r") as file:
         metrics_dict = json.load(file)
 
     metric_relabel_configs = []
@@ -77,9 +78,10 @@ def create_yaml():
     noalias_dumper.ignore_aliases = lambda self, data: True
 
     # backup old prom yaml
-    with open(prom_yaml_path, 'r') as source_fs:
-        with open(f"{prom_yaml_path}.bak.yml", 'w') as target_fs:
-            target_fs.write(source_fs.read())
+    if create_backup_file:
+        with open(prom_yaml_path, 'r') as source_fs:
+            with open(f"{prom_yaml_path}.bak.yml", 'w') as target_fs:
+                target_fs.write(source_fs.read())
 
     # write new prom frigga yaml
     with open(prom_yaml_path, 'w') as fs:
