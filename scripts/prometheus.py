@@ -2,11 +2,18 @@ import json
 import requests
 from bs4 import BeautifulSoup
 import yaml
-from .config import print_json
+from .config import print_json, print_msg
 
 
 def request_words(url, selector, replace_str="()", replace_with=""):
-    html_page_text = requests.get(url).text
+    response = requests.get(url)
+    if 200 <= response.status_code < 400:
+        print_msg(
+            msg_content=f"Successful response from {url}", msg_type='log')
+    else:
+        print_msg(
+            msg_content=f"Failed to reach {url}, have you provided the '--web.enable-admin-api' in Prometheus?")
+    html_page_text = response.text
     soup = BeautifulSoup(html_page_text, 'html.parser')
     return [
         item.string.replace(replace_str, replace_with)
@@ -16,10 +23,15 @@ def request_words(url, selector, replace_str="()", replace_with=""):
 
 def get_ignored_words():
     """Get the list of words to ignore when scraping from Grafana"""
+    print_msg(
+        msg_content="Getting the list of words to ignore when scraping from Grafana")
     words_list = []
 
-    with open("data.json", "r") as file:
-        data_file = json.load(file)
+    try:
+        with open("data.json", "r") as file:
+            data_file = json.load(file)
+    except:
+        print_json(msg_content="Can't read data.json file", msg_type="error")
     for item in data_file["data"]["prometheus_urls"]:
         words_list += request_words(item["url"], item["selectors"])
     return sorted(list(set(words_list)))

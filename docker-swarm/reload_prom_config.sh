@@ -8,7 +8,7 @@ echo ">> Reloading prometheus.yml configuration file"
 reloaded=$(docker exec ${prom_container_name} kill -HUP 1)
 if [[ -z ${reloaded} ]]; then
     echo ">> Reloaded"
-    [[ ! -z ${show_logs} ]] && docker logs ${prom_container_name}
+    [[ ! -z ${show_logs} ]] && docker logs ${prom_container_name} | tail -n 10
 else
     echo ${reloaded}
 fi

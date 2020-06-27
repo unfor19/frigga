@@ -10,11 +10,12 @@ def is_docker():
     )
 
 
-def print_msg(msg_content, data=None, msg_type='l'):
+def print_msg(msg_content, data=None, msg_type='l', terminate=False):
     if msg_type == "data" or msg_type == "d":
         msg = f">> {msg_content}\nData:\n"
     elif msg_type == "error" or msg_type == "e":
         msg = f">> [ERROR] {msg_content}"
+        terminate = True
     elif msg_type == "warning" or msg_type == "w":
         msg = f">> [WARNING] {msg_content}"
     elif msg_type == "log" or msg_type == "l":
@@ -27,6 +28,9 @@ def print_msg(msg_content, data=None, msg_type='l'):
             print(f"{msg} {data}")
     else:
         print(msg)
+
+    if terminate:
+        exit()
 
 
 def print_json(obj):

@@ -1,17 +1,27 @@
 import re
 import requests
-from .config import scrape_value_by_key
+from .config import scrape_value_by_key, print_msg
 from .prometheus import get_ignored_words
 
 
 def grafana_http_request(path, api_key, base_url="http://localhost:3000"):
     if not api_key:
-        print("ERROR: Need to create '.apikey' file")
-        exit()
+        print_msg(msg_content="Missing API Key",
+                  msg_type='error', terminate=True)
     url = f"{base_url}{path}"
-    return requests.get(url, headers={
+    response = requests.get(url, headers={
         "Authorization": f"Bearer {api_key}"
     })
+    if 200 <= response.status_code < 400:
+        print_msg(
+            msg_content=f"Successful response from {url}", msg_type='log')
+        return response
+    if response.status_code == 401:
+        print_msg(f"API Key is invalid", response.text,
+                  'error')
+    else:
+        print_msg(f"Unknown response", response.text, 'error')
+    return response
 
 
 def get_metrics_from_expr(expression, ignored_words_list):
@@ -56,6 +66,12 @@ def get_metrics_from_expr(expression, ignored_words_list):
 
 def get_metrics_list(base_url, api_key):
     ignored_words = get_ignored_words()
+    if len(ignored_words):
+        print_msg(
+            msg_content=f"Found {len(ignored_words)} words to ignore in expressions")
+    else:
+        print_msg(msg_content="No words to ignore, that's weird",
+                  msg_error="warning")
     dashboards = grafana_http_request(
         "/api/search?query=",
         api_key,
@@ -70,6 +86,8 @@ def get_metrics_list(base_url, api_key):
             api_key,
             base_url
         ).json()
+        dashboard_name = dashboard_body['meta']['slug']
+        print_msg(msg_content=f"Getting metrics from {dashboard_name}")
         expressions = scrape_value_by_key(dashboard_body, "expr")
         dashboard_metrics = []
         for expression in expressions:
@@ -83,11 +101,20 @@ def get_metrics_list(base_url, api_key):
                             dashboard_metrics.append(metric)
         dashboard_metrics = list(set(dashboard_metrics))
         dashboard_metrics.sort()
-        dashboard_name = dashboard_body['meta']['slug']
         dashboard_gnetid = dashboard_body['dashboard']['gnetId']
         data['dashboards'][dashboard_name] = dict()
         data['dashboards'][dashboard_name]['metrics'] = dashboard_metrics
         data['dashboards'][dashboard_name]['gnet_id'] = dashboard_gnetid
         data['dashboards'][dashboard_name]['num_metrics'] = len(
             dashboard_metrics)
+        print_msg(
+            msg_content=f"Found {data['dashboards'][dashboard_name]['num_metrics']} metrics")
+
+    all_metrics = []
+    for dashboard_name in data['dashboards']:
+        all_metrics += data['dashboards'][dashboard_name]['metrics']
+    data['all_metrics'] = sorted(list(set(all_metrics)))
+    data['all_metrics_num'] = len(data['all_metrics'])
+    print_msg(
+        msg_content=f"Found a total of {data['all_metrics_num']} unique metrics to keep")
     return data
