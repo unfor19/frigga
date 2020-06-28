@@ -2,6 +2,10 @@
 
 [![testing](https://github.com/unfor19/frigga/workflows/testing/badge.svg?branch=master)](https://github.com/unfor19/frigga/actions?query=workflow%3Atesting)
 
+<div style="text-align: center;">
+<img height="60px" alt="frigga-logo" src="https://frigga.s3-eu-west-1.amazonaws.com/frigga_pink_transparent.png?dummy=null" />
+</div>
+
 Scrape only relevant metrics in Prometheus, according to your Grafana dashboards, see the [before and after snapshot](https://snapshot.raintank.io/dashboard/snapshot/p4YmuKHu4jBlA2kPmOhbuda3jo4I51bt?orgId=2).
 
 This tool is extermely useful for [Grafana Cloud](https://grafana.com/products/cloud/) customers, since the pricing is per DataSeries ingestions.
