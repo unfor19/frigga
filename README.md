@@ -4,7 +4,7 @@
 
 Scrape only relevant metrics in Prometheus, according to your Grafana dashboards, see the [before and after snapshot](https://snapshot.raintank.io/dashboard/snapshot/p4YmuKHu4jBlA2kPmOhbuda3jo4I51bt?orgId=2).
 
-This tool extermely useful for [Grafana Cloud](https://grafana.com/products/cloud/) customers, since the pricing is per DataSeries ingestions.
+This is tool extermely useful for [Grafana Cloud](https://grafana.com/products/cloud/) customers, since the pricing is per DataSeries ingestions.
 
 ## Requirements
 
@@ -18,9 +18,9 @@ $ pip install frigga
 
 ## Getting Started
 
-1. Grafana - Import the dashboard [frigga - Jobs Usage](docker-compose/grafana/provisioning/dashboards/jobs-usage.json) (ID: 12537) to Grafana, and check out your current number of DataSeries
+1. Grafana - Import the dashboard [frigga - Jobs Usage](docker-compose/grafana/provisioning/dashboards/jobs-usage.json) (ID: 12537) to Grafana, and check out the number of DataSeries
 1. Grafana - Generate an API Key for `Viewer`
-1. Get the list of metrics that are used in your dasboards
+1. frigga - Get the list of metrics that are used in your Grafana dasboards
 
    ```bash
    $ frigga gl # gl is grafana-list, or good luck :)
@@ -46,7 +46,7 @@ $ pip install frigga
    }
    ```
 
-1. Edit your `prometheus.yml` file, add the following snippet to the bottom of the file. Check the example in [docker-compose/prometheus-original.yml](docker-compose/prometheus-original.yml)
+1. Add the following snippet to the bottom of your `prometheus.yml` file. Check the example in [docker-compose/prometheus-original.yml](docker-compose/prometheus-original.yml)
 
    ```yml
     ---
@@ -54,7 +54,7 @@ $ pip install frigga
     exclude_jobs: []
    ```
 
-1. Use the `.metrics.json` file to apply the rules to your existing `prometheus.yml`
+1. frigga - Use the `.metrics.json` file to apply the rules to your existing `prometheus.yml`
 
    ```bash
    $ frigga pa # pa is prometheus-apply, or pam-tada-dam
