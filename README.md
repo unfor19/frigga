@@ -158,15 +158,22 @@ $ pip install frigga
 
 ### Pros
 
-1. [Grafana-Cloud](https://grafana.com/products/cloud/) - the main reason for writing this tool, which lowers the costs due to minimizing the number of active DataSeries
+1. [Grafana-Cloud](https://grafana.com/products/cloud/) - As a Grafana Cloud customer, the main reason for writing this tool was lowering the costs. This goal was achieved by sending only the relevant DataSeries to Grafana Cloud
+negligible
 1. Saves disk-space on the machine running Prometheus
-1. Reduces network traffic when using `remote_write`
-1. Improves PromQL performance by querying less metrics
+1. Improves PromQL performance by querying less metrics; significant only when processing high volumes
 
 ### Cons
 
 1. After applying the rules in `prometheus.yml`, it makes the file less readable. Due to the fact it's not a file that you play with on a daily basis, it's okayish
-1. The memory usage of Prometheus increases slightly, around ~30MB, not critical, but I'm obligated to point it out
+1. The memory usage of Prometheus increases slightly, around ~30MB, not significant, but worth mentioning
+1. If you intend to use more metrics, for example, you've added a new dashboard which uses more metrics, you'll need to do the same process again; `frigga gl` and `frigga pa`
+
+## References
+- [metric_relabel_configs](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#metric_relabel_configs)
+- [Or in relabelling](https://www.robustperception.io/or-in-relabelling)
+- [relabel_configs vs metrics_relabel_configs](https://www.robustperception.io/relabel_configs-vs-metric_relabel_configs)
+
 
 ## Authors
 
