@@ -27,7 +27,9 @@ $ pip install frigga
 1. frigga - Get the list of metrics that are used in your Grafana dasboards
 
    ```bash
-   $ frigga gl # gl is grafana-list, or good luck :)
+   $ frigga gl
+   
+   # gl is grafana-list, or good luck :)
 
    Grafana url [http://localhost:3000]: http://my-grafana.grafana.net
    Grafana api key: (hidden)
@@ -61,7 +63,9 @@ $ pip install frigga
 1. frigga - Use the `.metrics.json` file to apply the rules to your existing `prometheus.yml`
 
    ```bash
-   $ frigga pa # pa is prometheus-apply, or pam-tada-dam
+   $ frigga pa
+   
+   # pa is prometheus-apply, or pam-tada-dam
 
    Prom yaml path [docker-compose/prometheus.yml]: /etc/prometheus/prometheus.yml
    Metrics json path [./.metrics.json]: /home/willywonka/.metrics.json
@@ -133,7 +137,9 @@ $ pip install frigga
 1. Apply the rules to `prometheus.yml`, keep the defaults
 
    ```bash
-   $ frigga pa # prometheus-apply
+   $ frigga pa
+   
+   # prometheus-apply
 
    Prom yaml path [docker-compose/prometheus.yml]:
    Metrics json path [./.metrics.json]:
