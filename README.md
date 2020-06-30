@@ -3,7 +3,7 @@
 [![testing](https://github.com/unfor19/frigga/workflows/testing/badge.svg?branch=master)](https://github.com/unfor19/frigga/actions?query=workflow%3Atesting)
 
 <div style="text-align: center;">
-<img alt="frigga-logo" width="100%" src="https://frigga.s3-eu-west-1.amazonaws.com/frigga_transparent_background_github_readme.png?dummy=null" />
+<img alt="frigga-logo" width="100%" src="https://frigga.s3-eu-west-1.amazonaws.com/frigga_transparent_background_github_readme.png" />
 </div>
 
 Do you have a Grafana instance with dashboards? frigga makes sure you don’t scrape metrics in Prometheus, which you don’t present in Grafana dashboards.
@@ -11,6 +11,16 @@ Do you have a Grafana instance with dashboards? frigga makes sure you don’t sc
 Scrape only relevant metrics in Prometheus, according to your Grafana dashboards, see the [before and after snapshot](https://snapshot.raintank.io/dashboard/snapshot/p4YmuKHu4jBlA2kPmOhbuda3jo4I51bt?orgId=2). frigga generates `keep` filters on [metric_relabel_configs](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#metric_relabel_configs), and adds them to your `prometheus.yml` file
 
 frigga is extermely useful for [Grafana Cloud](https://grafana.com/products/cloud/) customers, since the pricing is per DataSeries ingestions.
+
+## Illustration
+<details>
+<summary>Expand/Collapse</summary>
+   
+<div style="text-align: center;">
+<img alt="frigga-logo" width="100%" src="https://frigga.s3-eu-west-1.amazonaws.com/firrga-demo-light.gif" />
+</div>
+
+</details>
 
 ## Requirements
 
