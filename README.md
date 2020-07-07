@@ -10,7 +10,7 @@ Do you have a Grafana instance? frigga makes sure you don’t scrape metrics in 
 
 Scrape only relevant metrics in Prometheus, according to your Grafana dashboards, see the [before and after snapshot](https://snapshot.raintank.io/dashboard/snapshot/p4YmuKHu4jBlA2kPmOhbuda3jo4I51bt?orgId=2). frigga generates `keep` filters on [metric_relabel_configs](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#metric_relabel_configs), and adds them to your `prometheus.yml` file
 
-frigga is extermely useful for [Grafana Cloud](https://grafana.com/products/cloud/) customers, since the pricing is per DataSeries ingestions.
+frigga is extremely useful for [Grafana Cloud](https://grafana.com/products/cloud/) customers since the pricing is per DataSeries ingestions.
 
 ## Illustration
 <details>
