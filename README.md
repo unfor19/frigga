@@ -181,7 +181,6 @@ $ pip install frigga
 ### Pros
 
 1. [Grafana-Cloud](https://grafana.com/products/cloud/) - As a Grafana Cloud customer, the main reason for writing this tool was lowering the costs. This goal was achieved by sending only the relevant DataSeries to Grafana Cloud
-negligible
 1. Saves disk-space on the machine running Prometheus
 1. Improves PromQL performance by querying less metrics; significant only when processing high volumes
 
