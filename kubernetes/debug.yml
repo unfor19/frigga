@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: debug
+  namespace: default
+  labels:
+    app: debug
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: debug
+  template:
+    metadata:
+      labels:
+        app: debug
+    spec:
+      containers:
+        - name: debug
+          image: unfor19/debug-k8s:python-dev
+          imagePullPolicy: "Always"
+          env:
+            - name: CI
+              value: "true"
+          ports:
+            - containerPort: 8080
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 1000Mi
+            requests:
+              cpu: 400m
+              memory: 600Mi
+          volumeMounts:
+            - mountPath: "/root/frigga"
+              name: debug
+              readOnly: false
+      volumes:
+        - name: debug
+          hostPath:
+            path: /home/docker/
+            type: Directory

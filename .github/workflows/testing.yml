@@ -1,7 +1,7 @@
 name: testing
 on: push
 jobs:
-  test:
+  ubuntu:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -23,3 +23,32 @@ jobs:
         run: bash docker-compose/deploy_stack.sh
       - name: Apply Changes
         run: bash docker-compose/apply_changes.sh
+
+  minikube:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install minikube
+        uses: opsgang/ga-setup-minikube@v0.1.1
+        with:
+          minikube-version: 1.7.2
+          k8s-version: 1.17.2
+      - name: Start minikube
+        run: |
+          minikube start --vm-driver=docker --kubernetes-version v1.17.2
+          kubectl cluster-info
+          kubectl get pods -n kube-system
+      - name: Test minikube
+        run: bash kubernetes/minikube_test.sh
+      - name: Deploy Stack
+        env:
+          FRIGGA_TESTING: true
+        run: bash kubernetes/deploy_stack.sh
+      - name: Apply Changes
+        env:
+          FRIGGA_TESTING: true
+        run: bash kubernetes/exec_apply.sh
+      - name: Validate
+        env:
+          FRIGGA_TESTING: true
+        run: bash kubernetes/validate.sh
