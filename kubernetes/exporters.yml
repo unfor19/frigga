@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: node-exporter
-  namespace: monitoring
+  namespace: default
 spec:
   selector:
     app: node-exporter
@@ -15,7 +15,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: node-exporter
-  namespace: monitoring
+  namespace: default
   labels:
     app: node-exporter
 spec:
@@ -48,76 +48,17 @@ spec:
             - "--path.sysfs=/host/sys"
             - --collector.filesystem.ignored-mount-points
             - "^/(sys|proc|dev|host|etc|rootfs/var/lib/docker/containers|rootfs/var/lib/docker/overlay2|rootfs/run/docker/netns|rootfs/var/lib/docker/aufs)($$|/)"
+          resources:
+            limits:
+              cpu: 100m
+              memory: 100Mi
+            requests:
+              cpu: 100m
+              memory: 100Mi
       volumes:
         - name: proc
           hostPath:
             path: /proc
-            type: Directory
-        - name: sys
-          hostPath:
-            path: /sys
-            type: Directory
-        - name: rootfs
-          hostPath:
-            path: /
-            type: Directory
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: cadvisor
-  namespace: monitoring
-spec:
-  selector:
-    app: cadvisor
-  ports:
-    - protocol: TCP
-      port: 8080
-      targetPort: 8080
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: cadvisor
-  namespace: monitoring
-  labels:
-    app: cadvisor
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: cadvisor
-  template:
-    metadata:
-      labels:
-        app: cadvisor
-    spec:
-      containers:
-        - name: cadvisor
-          image: google/cadvisor
-          ports:
-            - containerPort: 9100
-          volumeMounts:
-            - mountPath: "/var/run"
-              name: var-run
-              readOnly: false
-            - mountPath: "/var/lib/docker"
-              name: var-lib-docker
-              readOnly: true
-            - mountPath: "/sys"
-              name: sys
-              readOnly: true
-            - mountPath: "/rootfs"
-              name: rootfs
-              readOnly: true
-      volumes:
-        - name: var-run
-          hostPath:
-            path: /var/run
-            type: Directory
-        - name: var-lib-docker
-          hostPath:
-            path: /var/lib/docker/
             type: Directory
         - name: sys
           hostPath:

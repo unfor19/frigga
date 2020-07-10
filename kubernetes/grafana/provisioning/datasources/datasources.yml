@@ -11,5 +11,5 @@ datasources:
     access: proxy
     orgId: 1
     isDefault: true
-    url: http://prometheus:9090
+    url: http://prometheus.default.svc.cluster.local:9090
     editable: false

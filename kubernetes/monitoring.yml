@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: prometheus
-  namespace: monitoring
+  namespace: default
 spec:
   selector:
     app: prometheus
@@ -15,7 +15,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: prometheus
-  namespace: monitoring
+  namespace: default
   labels:
     app: prometheus
 spec:
@@ -40,12 +40,29 @@ spec:
             - "--web.console.templates=/usr/share/prometheus/consoles"
             - "--web.enable-admin-api"
             - "--web.enable-lifecycle"
+          volumeMounts:
+            - mountPath: "/etc/prometheus/"
+              name: prometheus
+              readOnly: true
+          resources:
+            limits:
+              cpu: 100m
+              memory: 200Mi
+            requests:
+              cpu: 100m
+              memory: 200Mi
+      volumes:
+        - name: prometheus
+          hostPath:
+            path: /home/docker/.frigga/kubernetes/
+            type: Directory
+
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: grafana
-  namespace: monitoring
+  namespace: default
 spec:
   selector:
     app: grafana
@@ -58,7 +75,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: grafana
-  namespace: monitoring
+  namespace: default
   labels:
     app: grafana
 spec:
@@ -80,8 +97,15 @@ spec:
             - mountPath: "/etc/grafana/provisioning/"
               name: provisioning
               readOnly: true
+          resources:
+            limits:
+              cpu: 200m
+              memory: 200Mi
+            requests:
+              cpu: 100m
+              memory: 100Mi
       volumes:
         - name: provisioning
           hostPath:
-            path: /grafana/provisioning/
+            path: /home/docker/.frigga/kubernetes/grafana/provisioning/
             type: Directory
