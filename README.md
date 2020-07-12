@@ -206,7 +206,7 @@ Pull requests are welcome! Ideally, create a feature branch and issue for every 
 1. Create your feature branch from master (`git checkout -b my-new-feature`)
 1. Install from source
    ```bash
-    $ git clone https://github.com/${GITHUB_OWNER}/frigga.git && cd githubsecrets
+    $ git clone https://github.com/${GITHUB_OWNER}/frigga.git && cd frigga
     ...
     $ pip install --upgrade pip
     ...
