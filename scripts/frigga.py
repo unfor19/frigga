@@ -1,7 +1,7 @@
 import json
 import click
 from .grafana import get_metrics_list
-from .config import print_msg
+from .config import print_msg, is_docker
 from .prometheus import apply_yaml
 
 
@@ -40,11 +40,14 @@ class AliasedGroup(click.Group):
 
 
 # @click.group()
-@ click.command(cls=AliasedGroup)
-@click.option('--ci', '-ci', is_flag=True, help="Use this flag to avoid deletion confirmation prompts")  # noqa: E501
-def cli(ci):
-    """Test"""  # noqa: E501
-    pass
+@click.command(cls=AliasedGroup)
+@pass_config
+@click.option('--ci', '-ci', is_flag=True, help="Use this flag to avoid confirmation prompts")  # noqa: E501
+def cli(config, ci):
+    """No confirmation prompts"""  # noqa: E501
+    if is_docker():
+        ci = True
+    config.ci = ci  # noqa: F821
 
 
 @cli.command()

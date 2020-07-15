@@ -1,0 +1,27 @@
+# This workflows will upload a Python Package using Twine when a release is created
+# For more information see: https://help.github.com/en/actions/language-and-framework-guides/using-python-with-github-actions#publishing-to-package-registries
+
+name: Publish Image to DockerHub
+
+on:
+  release:
+    types: [published, edited]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build and publish
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+          DOCKER_REPOSITORY: unfor19/frigga
+          RELEASE_REF: ${{ github.ref }}
+        run: |
+          RELEASE_VERSION=$(echo "$RELEASE_REF" | sed "s|refs\/tags\/v||g")
+          echo -n $RELEASE_VERSION > ./version
+          DOCKER_TAG="DOCKER_REPOSITORY:${RELEASE_VERSION}"
+          docker build -f Dockerfile -t ${DOCKER_TAG} .
+          docker push ${DOCKER_TAG}
