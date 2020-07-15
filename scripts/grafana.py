@@ -88,11 +88,15 @@ def get_metrics_list(base_url, api_key):
         ).json()
         dashboard_name = dashboard_body['meta']['slug']
         print_msg(msg_content=f"Getting metrics from {dashboard_name}")
-        expressions = scrape_value_by_key(dashboard_body, "expr")
-        expressions += scrape_value_by_key(dashboard_body, "query")
+        expressions = scrape_value_by_key(dashboard_body, "expr", str)
+        expressions += scrape_value_by_key(dashboard_body, "query", str)
         dashboard_metrics = []
         for expression in expressions:
-            expr_metrics = get_metrics_from_expr(expression, ignored_words)
+            try:
+                expr_metrics = get_metrics_from_expr(expression, ignored_words)
+            except TypeError:
+                print_msg(msg_content=f"The following expression is corrupted",
+                          data=expression, msg_type='e')
             if expr_metrics:
                 for metric in expr_metrics:
                     try:

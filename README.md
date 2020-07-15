@@ -196,6 +196,33 @@ $ pip install frigga
 - [relabel_configs vs metrics_relabel_configs](https://www.robustperception.io/relabel_configs-vs-metric_relabel_configs)
 
 
+## Contributing
+
+Report issues/questions/feature requests on the [Issues](https://github.com/unfor19/frigga/issues) section.
+
+Pull requests are welcome! Ideally, create a feature branch and issue for every single change you make. These are the steps:
+
+1. Fork this repo
+1. Create your feature branch from master (`git checkout -b my-new-feature`)
+1. Install from source
+   ```bash
+    $ git clone https://github.com/${GITHUB_OWNER}/frigga.git && cd frigga
+    ...
+    $ pip install --upgrade pip
+    ...
+    $ python -m venv ./ENV
+    $ . ./ENV/bin/activate
+    ...
+    $ (ENV) pip install --editable .
+    ...
+    # Done! Now when you run 'frigga' it will get automatically updated when you modify the code
+   ```
+1. Add the code of your new feature
+1. Test - make sure `frigga grafana-list` and `frigga prometheus-apply` commands work
+1. Commit your remarkable changes (`git commit -am 'Added new feature'`)
+1. Push to the branch (`git push --set-up-stream origin my-new-feature`)
+1. Create a new Pull Request and tell us about your changes
+
 ## Authors
 
 Created and maintained by [Meir Gabay](https://github.com/unfor19)
