@@ -1,5 +1,6 @@
 import json
 import os
+import click
 
 
 def is_docker():
@@ -53,3 +54,14 @@ Returns a list of values, according to given key"""
                 if (isinstance(value, list) or isinstance(value, dict)):
                     scrape_value_by_key(value, search_key, type_key, my_list)
     return my_list
+
+
+class Config(object):
+    def __init__(self, raise_error=True):
+        self.verbose = False
+        self.errors = 0
+        self.errors_msg = ""
+        self.ci = False
+
+
+pass_config = click.make_pass_decorator(Config, ensure=True)
