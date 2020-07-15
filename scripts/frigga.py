@@ -1,7 +1,7 @@
 import json
 import click
 from .grafana import get_metrics_list
-from .config import print_msg, is_docker
+from .config import print_msg, is_docker, pass_config
 from .prometheus import apply_yaml
 
 
