@@ -10,7 +10,7 @@ providers:
     allowUiUpdates: true
     options:
       path: /etc/grafana/provisioning/dashboards/node-exporter.json
-  - name: "Prometheus Overview 2.0"
+  - name: "Prometheus Overview 2.0" # Removed "gnetId": 3662 from prometheus-overview.json
     orgId: 1
     type: file
     disableDeletion: false

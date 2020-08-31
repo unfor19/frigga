@@ -86,7 +86,10 @@ def get_metrics_list(base_url, api_key):
             api_key,
             base_url
         ).json()
-        dashboard_name = dashboard_body['meta']['slug']
+        dashboard_gnetid = dashboard_body['dashboard']['gnetId'] if 'gnetId' in dashboard_body[
+            'meta'] and dashboard_body['meta']['gnetId'] else "null"
+        dashboard_name = dashboard_body['meta']['slug'] if 'slug' in dashboard_body[
+            'meta'] and dashboard_body['meta']['slug'] else "null"
         print_msg(msg_content=f"Getting metrics from {dashboard_name}")
         expressions = scrape_value_by_key(dashboard_body, "expr", str)
         expressions += scrape_value_by_key(dashboard_body, "query", str)
@@ -105,7 +108,6 @@ def get_metrics_list(base_url, api_key):
                         if len(metric) > 5 and "/" not in metric:
                             dashboard_metrics.append(metric)
         dashboard_metrics = sorted(list(set(dashboard_metrics)))
-        dashboard_gnetid = dashboard_body['dashboard']['gnetId']
         data['dashboards'][dashboard_name] = dict()
         data['dashboards'][dashboard_name]['metrics'] = dashboard_metrics
         data['dashboards'][dashboard_name]['gnet_id'] = dashboard_gnetid
