@@ -78,7 +78,7 @@ def get_metrics_list(base_url, api_key):
         base_url
     ).json()
     data = {
-        "dashboards": {}
+        "dashboards": dict()
     }
     for dashboard in dashboards:
         dashboard_body = grafana_http_request(
@@ -91,8 +91,9 @@ def get_metrics_list(base_url, api_key):
         dashboard_name = dashboard_body['meta']['slug'] if 'slug' in dashboard_body[
             'meta'] and dashboard_body['meta']['slug'] else "null"
         print_msg(msg_content=f"Getting metrics from {dashboard_name}")
-        expressions = scrape_value_by_key(dashboard_body, "expr", str)
-        expressions += scrape_value_by_key(dashboard_body, "query", str)
+        expressions = \
+            scrape_value_by_key(dashboard_body, "expr", str, []) \
+            + scrape_value_by_key(dashboard_body, "query", str, [])
         dashboard_metrics = []
         for expression in expressions:
             try:
