@@ -29,7 +29,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Install minikube
-        uses: unfor19/ga-setup-minikube@0539662fc6d9300f25498c2a2f80086ff283d29e
+        uses: unfor19/ga-setup-minikube@24fa7fa7154668b03cc371c59a467c3282bdb07b
         with:
           minikube-version: 1.7.2
           k8s-version: 1.17.2
