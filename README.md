@@ -117,6 +117,8 @@ $ pip install frigga
 ### Getting Started
 
 1. git clone this repository
+1. Run Docker daemon (Docker for Desktop)
+1. Make sure port 8080 is not in use
 1. Deploy locally the services: Prometheus, Grafana, node-exporter and cadvisor
 
    ```bash
@@ -138,6 +140,7 @@ $ pip install frigga
 1. Get all the metrics that are used in your Grafana dasboards
 
    ```bash
+   $ export GRAFANA_API_KEY=the-key-that-was-generated-in-the-deploy-locally-step
    $ frigga gl -gurl http://localhost:3000 -gkey $GRAFANA_API_KEY
 
    >> [LOG] Getting the list of words to ignore when scraping from Grafana
