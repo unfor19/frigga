@@ -8,7 +8,9 @@ generate_apikey(){
         --data '{"name":"local","role":"Viewer","secondsToLive":86400}' \
         http://localhost:3000/api/auth/keys | jq -r .key)
     echo $apikey
-    [[ ! -z $FRIGGA_TESTING ]] && echo $apikey > .apikey
+    echo $apikey > .apikey && echo ">> API Key was saved in .apikey file"
+    echo ">> Export the key as environment variable for later use"
+    echo "export GRAFANA_API_KEY=${apikey}"
 }
 
 grafana_update_admin_password(){
