@@ -42,7 +42,7 @@ def get_ignored_words():
     return sorted(list(set(words_list)))
 
 
-def apply_yaml(prom_yaml_path, metrics_json_path, create_backup_file=True):
+def apply_yaml(prom_yaml_path, metrics_json_path, create_backup_file=True, skip_rules_file=False):
     print_msg(msg_content=f"Reading documents from {prom_yaml_path}")
     with open(prom_yaml_path, "r") as file:
         prom_yaml = file.read()
@@ -66,25 +66,40 @@ def apply_yaml(prom_yaml_path, metrics_json_path, create_backup_file=True):
         metrics_dict = json.load(file)
 
     print_msg(msg_content=f"Generating metrics_relabel_configs in memory")
-    metric_relabel_configs = []
+    relabel_configs = []
     for metric in metrics_dict['all_metrics']:
-        metric_relabel_configs.append({
+        relabel_configs.append({
             "source_labels": ['__name__'],
             "regex": f"^{metric}",
             "target_label": "__tmp_keep_me",
             "replacement": True
         })
-    metric_relabel_configs.append({
+    relabel_configs.append({
         "source_labels": ["__tmp_keep_me"],
         "regex": True,
         "action": "keep"
     })
-    for job in prom_doc['scrape_configs']:
-        if job['job_name'] not in frigga_doc['exclude_jobs']:
-            job['metric_relabel_configs'] = metric_relabel_configs
 
     noalias_dumper = yaml.dumper.SafeDumper
     noalias_dumper.ignore_aliases = lambda self, data: True
+
+    # write relabel configs to file
+    if not skip_rules_file:
+        rules_file_path = ".prometheus-rules.yml"
+        print_msg(
+            msg_content=f"Writing relabel_configs to {rules_file_path}")
+        with open(rules_file_path, 'w') as fs:
+            data = yaml.dump_all(
+                documents=[relabel_configs],
+                stream=fs, default_flow_style=False,
+                Dumper=noalias_dumper,
+                indent=2
+            )
+
+    # add relabel configs to all jobs, except the ones in exclude_jobs
+    for job in prom_doc['scrape_configs']:
+        if job['job_name'] not in frigga_doc['exclude_jobs']:
+            job['metric_relabel_configs'] = relabel_configs
 
     # backup old prom yaml
     if create_backup_file:

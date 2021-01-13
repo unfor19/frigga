@@ -56,7 +56,8 @@ def cli(config, ci):
 @click.option('--output-file-path', '-o', default='./.metrics.json', show_default=True, required=False, type=str)
 # @click.option('--file', '-f', prompt=False, default=".", help="Output metrics.json file to pwd")
 def grafana_list(grafana_url, grafana_api_key, output_file_path):
-    """Provide Grafana UrL and Grafana API Key (Viewer)\n
+    """Alias: gl\n
+Provide Grafana URL and Grafana API Key (Viewer)\n
 Returns a list of metrics that are used in all dashboards"""
     if "http" not in grafana_url:
         print_msg(
@@ -70,5 +71,13 @@ Returns a list of metrics that are used in all dashboards"""
 @click.option('--prom-yaml-path', '-ppath', default='docker-compose/prometheus.yml', prompt=True, required=True, show_default=False, type=str)
 @click.option('--metrics-json-path', '-mjpath', default='./.metrics.json', show_default=True, prompt=True, required=False, type=str)
 @click.option('--create-backup-file', '-b', is_flag=True, default=True, required=False)
-def prometheus_apply(prom_yaml_path, metrics_json_path, create_backup_file):
-    apply_yaml(prom_yaml_path, metrics_json_path, create_backup_file)
+@click.option('--skip-rules-file', '-sr', is_flag=True, default=False, required=False)
+def prometheus_apply(prom_yaml_path, metrics_json_path, create_backup_file, skip_rules_file):
+    """Alias: pa\n
+Applies .metrics.json for a given prometheus.yml file\n
+By default:\n
+- Creates a backup of prometheus.yml to prometheus.yml.bak.yml (same dir as prometheus.yml)\n
+- Creates a .prometheus-rules.yml file with all relabel_configs
+    """
+    apply_yaml(prom_yaml_path, metrics_json_path,
+               create_backup_file, skip_rules_file)
