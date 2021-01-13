@@ -70,5 +70,7 @@ Returns a list of metrics that are used in all dashboards"""
 @click.option('--prom-yaml-path', '-ppath', default='docker-compose/prometheus.yml', prompt=True, required=True, show_default=False, type=str)
 @click.option('--metrics-json-path', '-mjpath', default='./.metrics.json', show_default=True, prompt=True, required=False, type=str)
 @click.option('--create-backup-file', '-b', is_flag=True, default=True, required=False)
-def prometheus_apply(prom_yaml_path, metrics_json_path, create_backup_file):
-    apply_yaml(prom_yaml_path, metrics_json_path, create_backup_file)
+@click.option('--skip-rules-file', '-b', is_flag=True, default=False, required=False)
+def prometheus_apply(prom_yaml_path, metrics_json_path, create_backup_file, skip_rules_file):
+    apply_yaml(prom_yaml_path, metrics_json_path,
+               create_backup_file, skip_rules_file)
