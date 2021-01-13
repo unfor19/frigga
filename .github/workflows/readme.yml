@@ -17,7 +17,9 @@ jobs:
           pip install --editable .      
       - name: Prepare source file
         run: |
-          frigga --help > .help
+          echo "\`\`\`" > .help
+          frigga --help >> .help
+          echo "\`\`\`" >> .help
       - uses: unfor19/replacer-action@v1.0.3
         name: Update README.md file
         with:
