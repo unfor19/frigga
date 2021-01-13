@@ -1,0 +1,35 @@
+name: Update README.md
+on:
+  push:
+    branches: [master]
+    paths-ignore:
+      - "README.md"
+
+jobs:
+  update-readme:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install CLI
+        run: |
+          sudo apt remove python3-pip
+          python -m pip install --upgrade pip
+          pip install --editable .      
+      - name: Prepare source file
+        run: |
+          echo "\`\`\`" > .help
+          frigga --help >> .help
+          echo "\`\`\`" >> .help
+      - uses: unfor19/replacer-action@v1.0.3
+        name: Update README.md file
+        with:
+          src-file-path: ".help"
+          dst-file-path: "README.md"
+          start-value: "<!-- available_commands_start -->"
+          end-value: "<!-- available_commands_end -->"
+          git-user-name: "GitHub Actions"
+          git-user-email: "githubactions@meirg.co.il"
+          git-commit-msg: "Updated by GitHub Actions"
+          git-skip-commit: false
+          git-skip-push: false
+          create-backup: true
