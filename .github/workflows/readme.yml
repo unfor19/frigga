@@ -13,8 +13,8 @@ jobs:
       - name: Install CLI
         run: |
           sudo apt remove python3-pip
-          python -m pip install --upgrade pip
-          pip install --editable .      
+          python3 -m pip install --upgrade pip
+          python3 -m pip install --editable .      
       - name: Prepare source file
         run: |
           echo "\`\`\`" > .help
