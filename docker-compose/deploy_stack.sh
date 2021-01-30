@@ -36,7 +36,7 @@ docker-compose --project-name frigga \
 echo ">> Waiting for Grafana to be ready ..."
 counter=0
 until [ $counter -gt 6 ]; do
-    response=$(curl -s http://admin:admin@localhost:3000/api/health | jq -r .database)
+    response=$(curl -s http://admin:admin@localhost:3000/api/health | jq -r .database || true)
     if [[  $response == "ok" ]]; then
         echo ">> Grafana is ready!"
         grafana_update_admin_password
