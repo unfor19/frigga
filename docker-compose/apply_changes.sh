@@ -29,7 +29,7 @@ frigga prometheus-apply \
 
 # Reload prometheus configuration
 reload_result=$(source docker-compose/reload_prom_config.sh show)
-reload_succes=$(echo "${reload_result}" | tail -n 5 | grep "Completed loading of configuration file")
+reload_succes=$(echo "${reload_result}" | tail -n 3 | grep "Completed loading of configuration file")
 if [[ -z ${reload_succes} ]]; then
     echo ""
     echo ">> [LOG] Successfully reloaded prometheus.yml"
