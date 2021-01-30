@@ -10,8 +10,8 @@ fi
 
 AGENT_PID=$(eval `ssh-agent -s`)
 echo ">> [LOG] ssh-agent PID = $AGENT_PID"
-ssh-add ${MINIKUBE_HOME}/.minikube/machines/minikube/id_rsa
-IDENTITY_ADDED=$1
+# ssh-add ${MINIKUBE_HOME}/.minikube/machines/minikube/id_rsa
+# IDENTITY_ADDED=$1
 
 rm -rf .frigga
 mkdir .frigga
