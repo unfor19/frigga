@@ -31,17 +31,8 @@ frigga prometheus-apply \
     --metrics-json-path .metrics.json
 
 # Reload prometheus configuration
-reload_result=$(source docker-compose/reload_prom_config.sh show)
-reload_success=$(echo "${reload_result}" | tail -n 3 | grep "Completed loading of configuration file")
-if [[ -z ${reload_success} ]]; then
-    echo ""
-    echo ">> [LOG] Successfully reloaded prometheus.yml"
-    echo ""
-else
-    echo ">> [ERROR] Failed to reload prometheus.yml"
-    echo "${reload_result}"
-    exit 1
-fi
+source docker-compose/reload_prom_config.sh show
+
 
 # sleep 10
 
