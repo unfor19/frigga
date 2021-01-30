@@ -69,7 +69,7 @@ USER "${APP_USER_NAME}"
 
 # Upgrade pip, setuptools and wheel
 RUN pip install --user --upgrade pip && \
-    pip install --user --upgrade setuptools wheel keyrings.alt
+    pip install --user --upgrade setuptools wheel
 
 # Copy requirements.txt from Build Stage
 COPY --from=build /code/requirements.txt "${APP_ARTIFACT_DIR}"
@@ -88,5 +88,5 @@ RUN find . -type f -name *.whl -exec pip install --user {} \; -exec rm {} \;  &&
 # CMD python -m ${APP_NAME}
 
 # Use ENTRYPOINT instead CMD to force the container to start the application
-ENTRYPOINT python -m $APP_NAME
+ENTRYPOINT ["frigga"]
 ### --------------------------------------------------------------------
