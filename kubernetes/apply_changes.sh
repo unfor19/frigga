@@ -7,6 +7,7 @@ GRAFANA_API_KEY=$(curl -X POST -sL --user admin:admin -H "Content-Type: applicat
 
 # Install frigga
 python3 -m pip install --upgrade pip
+python3 -m pip install -r requirements.txt
 python3 -m pip install ${FRIGGA_FOLDER}
 
 # Generate .metrics.json 
