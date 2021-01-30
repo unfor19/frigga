@@ -1,4 +1,6 @@
 #!/bin/bash
+set -e
+set -o pipefail
 
 generate_apikey(){
     echo ">> Grafana - Generating API Key - for Viewer"
@@ -24,7 +26,7 @@ grafana_update_admin_password(){
     echo ">> Grafana - ${msg}"
 }
 
-network=$(docker network ls | grep frigga_net)
+network=$(docker network ls | grep frigga_net || true)
 [[ ! -z $network ]] && echo "ERROR: wait for network to be deleted, docker network ls, or restart docker daemon" && exit
 cp docker-compose/prometheus-original.yml docker-compose/prometheus.yml
 docker-compose --project-name frigga \
@@ -34,7 +36,7 @@ docker-compose --project-name frigga \
 echo ">> Waiting for Grafana to be ready ..."
 counter=0
 until [ $counter -gt 6 ]; do
-    response=$(curl -s http://admin:admin@localhost:3000/api/health | jq -r .database)
+    response=$(curl -s http://admin:admin@localhost:3000/api/health | jq -r .database || true)
     if [[  $response == "ok" ]]; then
         echo ">> Grafana is ready!"
         grafana_update_admin_password
