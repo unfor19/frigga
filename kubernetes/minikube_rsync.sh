@@ -1,4 +1,6 @@
 #!/bin/bash
+set -e
+set -o pipefail
 MINIKUBE_IP=$(minikube ip)
 if [[ -z $FRIGGA_TESTING ]]; then
     MINIKUBE_HOME=${HOME}

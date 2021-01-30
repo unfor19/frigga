@@ -1,4 +1,6 @@
 #!/bin/bash
+set -e
+set -o pipefail
 FRIGGA_FOLDER="/root/frigga/.frigga"
 
 GRAFANA_HOST="http://grafana.default.svc.cluster.local:3000"

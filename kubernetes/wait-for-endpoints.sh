@@ -1,4 +1,6 @@
 #!/bin/bash
+set -e
+set -o pipefail
 GRAFANA_HOST="http://grafana.default.svc.cluster.local:3000"
 PROMETHEUS_HOST="http://prometheus.default.svc.cluster.local:9090"
 NODEEXPORTER_HOST="http://node-exporter.default.svc.cluster.local:9100"
