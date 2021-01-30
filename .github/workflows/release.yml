@@ -34,6 +34,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install setuptools==50.3.2 wheel==0.35.1 twine==3.1.1
           pip install -r requirements.txt
+          pip install .
       - name: Test - Deploy Stack
         env:
           FRIGGA_TESTING: true
