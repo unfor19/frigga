@@ -2,7 +2,7 @@
 set -e
 set -o pipefail
 
-GRAFANA_API_KEY=$(cat .apikey)
+GRAFANA_API_KEY=$(cat .apikey || true)
 
 error_msg(){
     msg=$1
@@ -32,8 +32,8 @@ frigga prometheus-apply \
 
 # Reload prometheus configuration
 reload_result=$(source docker-compose/reload_prom_config.sh show)
-reload_succes=$(echo "${reload_result}" | tail -n 3 | grep "Completed loading of configuration file")
-if [[ -z ${reload_succes} ]]; then
+reload_success=$(echo "${reload_result}" | tail -n 3 | grep "Completed loading of configuration file")
+if [[ -z ${reload_success} ]]; then
     echo ""
     echo ">> [LOG] Successfully reloaded prometheus.yml"
     echo ""

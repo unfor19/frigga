@@ -26,7 +26,7 @@ grafana_update_admin_password(){
     echo ">> Grafana - ${msg}"
 }
 
-network=$(docker network ls | grep frigga_net)
+network=$(docker network ls | grep frigga_net || true)
 [[ ! -z $network ]] && echo "ERROR: wait for network to be deleted, docker network ls, or restart docker daemon" && exit
 cp docker-compose/prometheus-original.yml docker-compose/prometheus.yml
 docker-compose --project-name frigga \
