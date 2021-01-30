@@ -5,7 +5,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.6, 3.7, 3.8]
+        python-version: [3.6, 3.7, 3.8, 3.9]
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python ${{ matrix.python-version }}
@@ -16,7 +16,7 @@ jobs:
         run: |
           sudo apt remove python3-pip
           python -m pip install --upgrade pip
-          pip install --editable .
+          pip install .
       - name: Deploy Stack
         env:
           FRIGGA_TESTING: true
