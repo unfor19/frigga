@@ -6,7 +6,7 @@ POD_PROMETHEUS=$(kubectl get pods --selector=app=prometheus | grep 1/1.*Running 
 [[ -z ${POD_PROMETHEUS} ]] && echo "The container ${POD_PROMETHEUS} is not running, execute first docker-compose/deploy_stack.sh"
 
 reload_result=$(kubectl logs ${POD_PROMETHEUS})
-reload_success=$(echo "${reload_result}" | tail -n 5 | grep ".*Completed loading of configuration file.*")
+reload_success=$(echo "${reload_result}" | tail -n 3 | grep ".*Completed loading of configuration file.*")
 if [[ -z ${reload_succes} ]]; then
     echo ""
     echo ">> [LOG] Successfully reloaded prometheus.yml"
