@@ -1,7 +1,8 @@
 #!/bin/bash
 set -e
 set -o pipefail
-POD_PROMETHEUS=$(kubectl get pods | grep debug.*Running | cut -f 1 -d " ")
+kubectl get pods
+POD_PROMETHEUS=$(kubectl get pods | grep debug.*Running | cut -f 1 -d " " 2>/dev/null || true)
 [[ -z ${POD_PROMETHEUS} ]] && echo "The container ${POD_PROMETHEUS} is not running, execute first docker-compose/deploy_stack.sh"
 
 reload_result=$(kubectl logs ${POD_PROMETHEUS})
