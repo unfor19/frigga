@@ -1,4 +1,7 @@
 #!/bin/bash
+set -e
+set -o pipefail
+
 GRAFANA_API_KEY=$(cat .apikey)
 
 error_msg(){

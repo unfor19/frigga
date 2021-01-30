@@ -1,4 +1,6 @@
 #!/bin/bash
+set -e
+set -o pipefail
 
 generate_apikey(){
     echo ">> Grafana - Generating API Key - for Viewer"
