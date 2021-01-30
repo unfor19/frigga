@@ -1,4 +1,6 @@
 #!/bin/bash
+set -e
+set -o pipefail
 source kubernetes/minikube_rsync.sh
 # minikube ssh "cp /home/docker/frigga/kubernetes/prometheus-original.yml /home/docker/frigga/kubernetes/prometheus.yml"
 
