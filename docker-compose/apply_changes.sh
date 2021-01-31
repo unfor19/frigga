@@ -10,15 +10,13 @@ error_msg(){
     exit 1
 }
 
-# get_num_series(){
-#     result=$(curl -s http://localhost:9090/api/v1/status/tsdb \
-#         | jq -c '.data.seriesCountByLabelValuePair | map(select(.name | contains("job="))) | map(.value) | add')
-#     echo $result    
-# }
+get_num_series(){
+    source scripts/get_total_dataseries_num.sh http://localhost:9090
+}
 
 [[ -z ${GRAFANA_API_KEY} ]] && error_msg ".apikey file is empty"
 
-# num_series_before=$(get_num_series)
+num_series_before=$(get_num_series)
 
 # Generate .metrics.json
 frigga grafana-list \
@@ -33,16 +31,16 @@ frigga prometheus-apply \
 # Reload prometheus configuration
 source docker-compose/reload_prom_config.sh show
 
+echo ">> [LOG] Sleeping for 10 seconds ..."
+sleep 10
 
-# sleep 10
-
-# # Comparing results
-# num_series_after=$(get_num_series)
-# echo ">> [LOG] Before: ${num_series_before}"
-# echo ">> [LOG] After: ${num_series_after}"
-# if [[ "$num_series_after" -lt "$num_series_before" ]]; then
-#     echo ">> [LOG] Passed testing! After is little than before"
-#     exit 0
-# else
-#     error_msg "Failed testing! Before is little than after"
-# fi
+# Comparing results
+num_series_after=$(get_num_series)
+echo ">> [LOG] Before: ${num_series_before}"
+echo ">> [LOG] After: ${num_series_after}"
+if [[ "$num_series_after" -lt "$num_series_before" ]]; then
+    echo ">> [LOG] Passed testing! After is smaller than before"
+    exit 0
+else
+    error_msg "Failed testing! Before is smaller or equal to after"
+fi
