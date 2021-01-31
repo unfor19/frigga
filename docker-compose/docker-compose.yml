@@ -52,7 +52,7 @@ services:
       - net1
 
   grafana:
-    image: grafana/grafana:7.0.3
+    image: grafana/grafana:7.3.7
     volumes:
       - ./grafana/provisioning/:/etc/grafana/provisioning/
     ports:
