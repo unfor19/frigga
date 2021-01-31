@@ -2,15 +2,18 @@
 set -e
 set -o pipefail
 
+error_msg(){
+    msg=$1
+    echo ">> [ERROR] ${msg}"
+    exit 1
+}
+
 get_num_series(){
     source scripts/get_total_dataseries_num.sh http://localhost:9090
 }
 
 # Check if debug pod is running, fail otherwise
 POD_DEBUG=$(kubectl get pods | grep debug.*Running | cut -f 1 -d " ")
-
-# Make Prometheus HTTP API available from host (background job "&")
-kubectl port-forward service/prometheus 9090:9090 &
 
 # Check num of dataseries before
 num_series_before=$(get_num_series)
