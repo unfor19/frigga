@@ -23,7 +23,7 @@ jobs:
         run: |
           echo "\`\`\`" > .help
           frigga --help >> .help
-          echo "\`\`\`" >> .help
+          echo -n "\`\`\`" >> .help
       - uses: unfor19/replacer-action@v1.0.3
         name: Update README.md file
         with:
