@@ -2,7 +2,7 @@
 ### Docker Build Arguments
 ### Available only during Docker build - `docker build --build-arg ...`
 ### --------------------------------------------------------------------
-ARG PYTHON_VERSION="3.9.0"
+ARG PYTHON_VERSION="3.9.1"
 ARG APP_NAME="frigga"
 ARG APP_PYTHON_USERBASE="/frigga"
 ARG APP_USER_NAME="appuser"
@@ -14,8 +14,6 @@ ARG APP_GROUP_ID="appgroup"
 ### Build Stage
 ### --------------------------------------------------------------------
 FROM python:"$PYTHON_VERSION"-slim as build
-
-RUN apt-get update && apt-get install -y libdbus-glib-1-dev gcc
 
 ARG APP_PYTHON_USERBASE
 
@@ -42,7 +40,7 @@ COPY . .
 RUN python setup.py bdist_wheel && \
     find dist/ -type f -name *.whl \
     -exec check-wheel-contents {} \; \
-    -exec pip install --prefix="/dist/" --ignore-installed {} \;
+    -exec pip install --prefix="/dist" --ignore-installed {} \;
 
 WORKDIR /dist/
 
