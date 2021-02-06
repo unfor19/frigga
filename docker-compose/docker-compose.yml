@@ -5,7 +5,7 @@ networks:
 
 services:
   prometheus:
-    image: prom/prometheus
+    image: prom/prometheus:v2.24.1
     volumes:
       - ./:/etc/prometheus/
     command:
@@ -24,7 +24,7 @@ services:
       - net1
 
   node-exporter:
-    image: prom/node-exporter
+    image: prom/node-exporter:v1.1.0
     volumes:
       - /proc:/host/proc:ro
       - /sys:/host/sys:ro
@@ -40,7 +40,7 @@ services:
       - net1
 
   cadvisor:
-    image: google/cadvisor
+    image: google/cadvisor:v0.33.0
     volumes:
       - /:/rootfs:ro
       - /var/run:/var/run:rw

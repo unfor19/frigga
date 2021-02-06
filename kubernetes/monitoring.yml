@@ -30,7 +30,7 @@ spec:
     spec:
       containers:
         - name: prometheus
-          image: prom/prometheus
+          image: prom/prometheus:v2.24.1
           ports:
             - containerPort: 9090
           args:
@@ -90,7 +90,7 @@ spec:
     spec:
       containers:
         - name: grafana
-          image: grafana/grafana:7.0.3
+          image: grafana/grafana:7.3.7
           ports:
             - containerPort: 3000
           volumeMounts:
