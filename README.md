@@ -140,7 +140,10 @@ Commands:
 
 1. git clone this repository
 1. Run Docker daemon (Docker for Desktop)
-1. Make sure port 8080 is not in use
+1. Make sure ports 3000,8080,9100 are not in use (state=closed)
+   ```bash
+   docker run --rm -it --network=host unfor19/net-tools nmap -p 8080,3000,9100 -n localhost
+   ```
 1. Deploy locally the services: Prometheus, Grafana, node-exporter and cadvisor
 
    ```bash
