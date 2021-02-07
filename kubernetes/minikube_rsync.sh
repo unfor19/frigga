@@ -14,5 +14,5 @@ echo ">> [LOG] ssh-agent PID = $AGENT_PID"
 rm -rf .frigga
 mkdir .frigga
 echo $PWD
-cp kubernetes/prometheus-original.yml kubernetes/prometheus.yml
+
 rsync -Pavr --filter=':- .gitignore' $PWD/ .frigga/
