@@ -123,15 +123,18 @@ def apply_yaml(prom_yaml_path, metrics_json_path, create_backup_file=True, skip_
         msg_content=f"Done! Now reload {prom_yaml_path} with 'docker exec $PROM_CONTAINER_NAME kill -HUP 1'")
 
 
-def reload_prom(prom_url="http://localhost:9090"):
+def reload_prom(prom_url="http://localhost:9090", raw=False):
     api_path = "/-/reload"
     url = f"{prom_url}{api_path}"
     response = requests.post(url, allow_redirects=True)
     if 200 <= response.status_code < 204:
-        print_msg(
-            msg_content=f"Successfully reloaded Prometheus - {url}",
-            msg_type='log'
-        )
+        if raw:
+            print(response.status_code)
+        else:
+            print_msg(
+                msg_content=f"Successfully reloaded Prometheus - {url}",
+                msg_type='log'
+            )
     else:
         print_msg(
             msg_content=f"Failed to reload Prometheus - {url}, have you provided the '--web.enable-admin-api' in Prometheus?",  # noqa:501

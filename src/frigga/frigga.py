@@ -86,11 +86,12 @@ By default:\n
 
 @cli.command()
 @click.option('--prom-url', '-u', default='http://localhost:9090', prompt=True, required=True, show_default=False, type=str)  # noqa: 501
-def prometheus_reload(prom_url):
+@click.option('--raw', '-r', is_flag=True, default=False, required=False)  # noqa: 501
+def prometheus_reload(prom_url, raw):
     """Alias: pr\n
     Reload Prometheus
     """
-    reload_prom(prom_url)
+    reload_prom(prom_url, raw)
 
 
 @cli.command()
