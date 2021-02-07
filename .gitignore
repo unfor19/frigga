@@ -11,3 +11,4 @@ docker-compose/data/*
 !docker-compose/data/empty
 *.bak.*
 docker-compose/prometheus.yml
+kubernetes/prometheus.yml

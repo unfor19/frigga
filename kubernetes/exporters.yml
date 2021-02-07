@@ -68,3 +68,62 @@ spec:
           hostPath:
             path: /
             type: Directory
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: container-exporter
+  namespace: default
+spec:
+  selector:
+    app: container-exporter
+  ports:
+    - protocol: TCP
+      port: 9104
+      targetPort: 9104
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: container-exporter
+  namespace: default
+  labels:
+    app: container-exporter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: container-exporter
+  template:
+    metadata:
+      labels:
+        app: container-exporter
+    spec:
+      containers:
+        - name: container-exporter
+          image: prom/container-exporter:latest
+          ports:
+            - containerPort: 9104
+          volumeMounts:
+            - mountPath: "/cgroup"
+              name: cgroup
+              readOnly: true
+            - mountPath: "/var/run/docker.sock"
+              name: docker-sock
+              readOnly: true
+          resources:
+            limits:
+              cpu: 100m
+              memory: 100Mi
+            requests:
+              cpu: 100m
+              memory: 100Mi    
+      volumes:
+        - name: cgroup
+          hostPath:
+            path: /sys/fs/cgroup
+            type: Directory
+        - name: docker-sock
+          hostPath:
+            path: /var/run/docker.sock
+            type: Socket
