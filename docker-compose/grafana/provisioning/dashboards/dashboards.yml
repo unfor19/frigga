@@ -10,7 +10,7 @@ providers:
     allowUiUpdates: true
     options:
       path: /etc/grafana/provisioning/dashboards/node-exporter.json
-  - name: "cadvisor"
+  - name: "Docker containers monitoring"
     orgId: 1
     type: file
     disableDeletion: false
@@ -18,7 +18,7 @@ providers:
     updateIntervalSeconds: 10
     allowUiUpdates: true
     options:
-      path: /etc/grafana/provisioning/dashboards/cadvisor.json
+      path: /etc/grafana/provisioning/dashboards/container-exporter.json
   - name: "Prometheus Overview 2.0"
     orgId: 1
     type: file

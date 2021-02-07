@@ -9,12 +9,17 @@ scrape_configs:
   - job_name: "prometheus"
     scrape_interval: 5s
     static_configs:
-      - targets: ["prometheus.default.svc.cluster.local:9090"]
+      - targets: ["localhost:9090"]
 
   - job_name: "node-exporter"
     scrape_interval: 5s
     static_configs:
       - targets: ["node-exporter.default.svc.cluster.local:9100"]
+
+  - job_name: "container-exporter"
+    scrape_interval: 5s
+    static_configs:
+      - targets: ["container-exporter.default.svc.cluster.local:9104"]      
 ---
 name: frigga
 exclude_jobs: []

@@ -34,16 +34,14 @@ $ pip install frigga
 
 ### Docker
 
-Run as a Docker container and add the `--network=host` flag
-
 ```bash
-docker run --rm -it --network=host unfor19/frigga
+docker run --rm -it -v "$PWD"/:/code/ --workdir=/code/ unfor19/frigga
 ```
 
 For ease of use, add an alias in your `~/.bashrc` file
 
 ```bash
-alias frigga="docker run --rm -it --network=host unfor19/frigga"
+alias frigga="docker run --rm -it -v "$PWD"/:/code/ --workdir=/code/ unfor19/frigga"
 ```
 
 ## Available Commands

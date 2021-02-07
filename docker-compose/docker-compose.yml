@@ -5,6 +5,7 @@ networks:
 
 services:
   prometheus:
+    container_name: frigga_prometheus
     image: prom/prometheus:v2.24.1
     volumes:
       - ./:/etc/prometheus/
@@ -18,12 +19,13 @@ services:
     ports:
       - 9090:9090
     depends_on:
-      - cadvisor
+      - container-exporter
       - node-exporter
     networks:
       - net1
 
   node-exporter:
+    container_name: frigga_node-exporter
     image: prom/node-exporter:v1.1.0
     volumes:
       - /proc:/host/proc:ro
@@ -39,25 +41,27 @@ services:
     networks:
       - net1
 
-  cadvisor:
-    image: google/cadvisor:v0.33.0
+  container-exporter:
+    container_name: frigga_container-exporter
+    image: prom/container-exporter:latest
     volumes:
-      - /:/rootfs:ro
-      - /var/run:/var/run:rw
-      - /sys:/sys:ro
-      - /var/lib/docker/:/var/lib/docker:ro
+      - /sys/fs/cgroup:/cgroup
+      - /var/run/docker.sock:/var/run/docker.sock
     ports:
-      - 8080:8080
+      - 9104:9104
     networks:
       - net1
 
   grafana:
+    container_name: frigga_grafana    
     image: grafana/grafana:7.3.7
     volumes:
       - ./grafana/provisioning/:/etc/grafana/provisioning/
     ports:
       - 3000:3000
     depends_on:
+      - container-exporter
       - prometheus
+      - node-exporter
     networks:
       - net1
