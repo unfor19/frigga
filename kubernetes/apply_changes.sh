@@ -33,10 +33,10 @@ echo ">> [LOG] Before: ${num_series_before}"
 frigga gl -gurl ${GRAFANA_HOST} -gkey ${GRAFANA_API_KEY}
 
 # Add filters to prometheus.yml
-frigga pa -ppath kubernetes/prometheus.yml -mjpath .metrics.json
+frigga pa -ppath kubernetes/prometheus-original.yml -mjpath .metrics.json
 
 # Reload prometheus
-curl -X POST http://prometheus.default.svc.cluster.local:9090/-/reload
+curl -s -X POST http://prometheus.default.svc.cluster.local:9090/-/reload
 echo ">> [LOG] Prometheus was reloaded"
 
 echo ">> [LOG] Sleeping for 10 seconds ..."
@@ -49,6 +49,9 @@ echo ">> [LOG] After: ${num_series_after}"
 if [[ "$num_series_after" -lt "$num_series_before" ]]; then
     echo ">> [LOG] Passed testing! After is smaller than before"
     exit 0
+elif [[ "$num_series_after" -eq "$num_series_before" ]]; then
+    echo ">> [WARNING] Before and after are equal, nothing has changed"
+    exit 0    
 else
-    error_msg "Failed testing! Before is smaller or equal to after"
+    error_msg "Failed testing! Before is smaller than after"
 fi

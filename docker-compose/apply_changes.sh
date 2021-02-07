@@ -41,6 +41,9 @@ echo ">> [LOG] After: ${num_series_after}"
 if [[ "$num_series_after" -lt "$num_series_before" ]]; then
     echo ">> [LOG] Passed testing! After is smaller than before"
     exit 0
+elif [[ "$num_series_after" -eq "$num_series_before" ]]; then
+    echo ">> [WARNING] Before and after are equal, nothing has changed"
+    exit 0    
 else
-    error_msg "Failed testing! Before is smaller or equal to after"
+    error_msg "Failed testing! Before is smaller than after"
 fi
