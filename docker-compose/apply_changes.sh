@@ -2,7 +2,7 @@
 set -e
 set -o pipefail
 
-GRAFANA_API_KEY=$(cat .apikey || true)
+GRAFANA_API_KEY="$(cat .apikey || true)"
 
 error_msg(){
     msg=$1
