@@ -3,7 +3,33 @@ version: "3.7"
 networks:
   net1:
 
+volumes:
+  vmdata:
+
 services:
+  victoriametrics_tsdb:
+    container_name: frigga_victoriametrics
+    image: victoriametrics/victoria-metrics:v1.53.1
+    ports:
+      - 8428:8428
+      - 8089:8089
+      - 8089:8089/udp
+      - 2003:2003
+      - 2003:2003/udp
+      - 4242:4242
+    volumes:
+      - vmdata:/storage
+    command:
+      - '--storageDataPath=/storage'
+      - '--graphiteListenAddr=:2003'
+      - '--opentsdbListenAddr=:4242'
+      - '--httpListenAddr=:8428'
+      - '--influxListenAddr=:8089'
+    networks:
+      - net1
+    restart: always
+
+
   prometheus:
     container_name: frigga_prometheus
     image: prom/prometheus:v2.24.1
