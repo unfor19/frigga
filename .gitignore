@@ -12,3 +12,4 @@ docker-compose/data/*
 *.bak.*
 docker-compose/prometheus.yml
 kubernetes/prometheus.yml
+pip-wheel-metadata

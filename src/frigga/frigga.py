@@ -2,7 +2,7 @@ import json
 import click
 from .grafana import get_metrics_list
 from .config import print_msg, is_docker, pass_config
-from .prometheus import apply_yaml
+from .prometheus import apply_yaml, reload_prom, get_total_dataseries
 
 
 class AliasedGroup(click.Group):
@@ -17,6 +17,7 @@ class AliasedGroup(click.Group):
             "g": "get",
             "d": "delete",
             "l": "list",
+            "r": "reload",
         }
         if len(cmd_name) == 2:
             words = []
@@ -81,3 +82,23 @@ By default:\n
     """
     apply_yaml(prom_yaml_path, metrics_json_path,
                create_backup_file, skip_rules_file)
+
+
+@cli.command()
+@click.option('--prom-url', '-u', default='http://localhost:9090', prompt=True, required=True, show_default=False, type=str)  # noqa: 501
+@click.option('--raw', '-r', is_flag=True, default=False, required=False)  # noqa: 501
+def prometheus_reload(prom_url, raw):
+    """Alias: pr\n
+    Reload Prometheus
+    """
+    reload_prom(prom_url, raw)
+
+
+@cli.command()
+@click.option('--prom-url', '-u', default='http://localhost:9090', prompt=True, required=True, show_default=False, type=str)  # noqa: 501
+@click.option('--raw', '-r', is_flag=True, default=False, required=False)  # noqa: 501
+def prometheus_get(prom_url, raw):
+    """Alias: pg\n
+    Get total number of data series
+    """
+    get_total_dataseries(prom_url, raw)

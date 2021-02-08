@@ -2,7 +2,8 @@ import json
 import requests
 from bs4 import BeautifulSoup
 import yaml
-from .config import print_json, print_msg
+from .config import print_msg
+from time import time
 
 
 def request_words(url, selector, replace_str="()", replace_with=""):
@@ -120,3 +121,59 @@ def apply_yaml(prom_yaml_path, metrics_json_path, create_backup_file=True, skip_
         )
     print_msg(
         msg_content=f"Done! Now reload {prom_yaml_path} with 'docker exec $PROM_CONTAINER_NAME kill -HUP 1'")
+
+
+def reload_prom(prom_url="http://localhost:9090", raw=False):
+    api_path = "/-/reload"
+    url = f"{prom_url}{api_path}"
+    response = requests.post(url, allow_redirects=True)
+    if 200 <= response.status_code < 204:
+        if raw:
+            print(response.status_code)
+        else:
+            print_msg(
+                msg_content=f"Successfully reloaded Prometheus - {url}",
+                msg_type='log'
+            )
+    else:
+        print_msg(
+            msg_content=f"Failed to reload Prometheus - {url}, have you provided the '--web.enable-admin-api' in Prometheus?",  # noqa:501
+            msg_type='error',
+            data=response.text
+        )
+    return True
+
+
+def get_total_dataseries(prom_url="http://localhost:9090", raw=False):
+    api_path = "/api/v1/query"
+    target_url = f"{prom_url}{api_path}"
+    query = "sum(scrape_samples_post_metric_relabeling)"
+    timestamp = int(time())
+    query_string_parameters = f"query={query}&start={timestamp}"
+    url = f"{target_url}?{query_string_parameters}"
+
+    response = requests.get(url, allow_redirects=True)
+    if 200 <= response.status_code < 204:
+        resp = response.json()
+        try:
+            data = resp['data']['result'][0]['value'][1]
+        except Exception as e:
+            print_msg(
+                msg_content=f"Unknown response\n{e}",
+                data=resp,
+                msg_type="error"
+            )
+        if raw:
+            print(data)
+        else:
+            print_msg(
+                msg_content=f"Total number of data-series: {data}",
+                msg_type='log'
+            )
+    else:
+        print_msg(
+            msg_content=f"Failed to get total number of data-series. Is Prometheus reachable? - {url}",  # noqa:501
+            msg_type='error',
+            data=response.text
+        )
+    return True
