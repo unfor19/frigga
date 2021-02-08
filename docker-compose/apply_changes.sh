@@ -11,7 +11,7 @@ error_msg(){
 }
 
 get_num_series(){
-    source scripts/get_total_dataseries_num.sh http://localhost:9090
+    source scripts/get_total_dataseries_num.sh "http://localhost:9090"
 }
 
 [[ -z ${GRAFANA_API_KEY} ]] && error_msg ".apikey file is empty"
