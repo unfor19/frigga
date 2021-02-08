@@ -2,21 +2,18 @@
 set -e
 set -o pipefail
 
-GRAFANA_API_KEY=$(cat .apikey || true)
+GRAFANA_API_KEY="$(cat .apikey || true)"
 
 error_msg(){
-    msg=$1
+    msg="$1"
     echo ">> [ERROR] ${msg}"
     exit 1
 }
 
-get_num_series(){
-    source scripts/get_total_dataseries_num.sh http://localhost:9090
-}
 
-[[ -z ${GRAFANA_API_KEY} ]] && error_msg ".apikey file is empty"
+[[ -z "${GRAFANA_API_KEY}" ]] && error_msg ".apikey file is empty"
 
-num_series_before=$(get_num_series)
+num_series_before=$(frigga pg -u "http://localhost:9090" -r)
 
 # Generate .metrics.json
 frigga grafana-list \
@@ -35,7 +32,7 @@ echo ">> [LOG] Sleeping for 10 seconds ..."
 sleep 10
 
 # Comparing results
-num_series_after=$(get_num_series)
+num_series_after=$(frigga pg -u "http://localhost:9090" -r)
 echo ">> [LOG] Before: ${num_series_before}"
 echo ">> [LOG] After: ${num_series_after}"
 if [[ "$num_series_after" -lt "$num_series_before" ]]; then

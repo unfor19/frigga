@@ -13,3 +13,8 @@ datasources:
     isDefault: true
     url: http://prometheus:9090
     editable: false
+  - name: VictoriaMetrics
+    type: prometheus
+    access: proxy
+    url: http://frigga_victoriametrics:8428
+    isDefault: false

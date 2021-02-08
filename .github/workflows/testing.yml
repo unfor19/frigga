@@ -22,7 +22,7 @@ jobs:
           FRIGGA_TESTING: true
         run: bash docker-compose/deploy_stack.sh
       - name: Apply Changes
-        run: bash docker-compose/apply_changes.sh
+        run: ./docker-compose/apply_changes.sh
 
   minikube:
     runs-on: ubuntu-latest
