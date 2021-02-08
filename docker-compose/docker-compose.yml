@@ -28,6 +28,8 @@ services:
     networks:
       - net1
     restart: always
+    depends_on: 
+      - prometheus
 
 
   prometheus:
@@ -86,8 +88,7 @@ services:
     ports:
       - 3000:3000
     depends_on:
-      - container-exporter
       - prometheus
-      - node-exporter
+      - victoriametrics_tsdb
     networks:
       - net1
