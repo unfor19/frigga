@@ -3,8 +3,8 @@ version: "3.7"
 networks:
   net1:
 
-volumes:
-  vmdata:
+# volumes:
+#   vmdata:
 
 services:
   victoriametrics_tsdb:
@@ -17,8 +17,8 @@ services:
       - 2003:2003
       - 2003:2003/udp
       - 4242:4242
-    volumes:
-      - vmdata:/storage
+    # volumes:
+    #   - vmdata:/storage
     command:
       - '--storageDataPath=/storage'
       - '--graphiteListenAddr=:2003'
