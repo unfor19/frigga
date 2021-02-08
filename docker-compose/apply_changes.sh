@@ -1,11 +1,11 @@
 #!/bin/bash
 set -e
-set -o pipefail
+# set -o pipefail
 
 GRAFANA_API_KEY="$(cat .apikey || true)"
 
 error_msg(){
-    msg=$1
+    msg="$1"
     echo ">> [ERROR] ${msg}"
     exit 1
 }
