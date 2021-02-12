@@ -120,7 +120,7 @@ def apply_yaml(prom_yaml_path, metrics_json_path, create_backup_file=True, skip_
             indent=2
         )
     print_msg(
-        msg_content=f"Done! Now reload {prom_yaml_path} with 'docker exec $PROM_CONTAINER_NAME kill -HUP 1'")
+        msg_content=f"Done! Now reload {prom_yaml_path} with 'frigga pr -u http://localhost:9090'")
 
 
 def reload_prom(prom_url="http://localhost:9090", raw=False):
