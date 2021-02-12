@@ -119,7 +119,7 @@ Commands:
    Metrics json path [./.metrics.json]: /home/willywonka/.metrics.json
    >> [LOG] Reading documents from docker-compose/prometheus.yml
    ...
-   >> [LOG] Done! Now reload docker-compose/prometheus.yml with 'docker exec $PROM_CONTAINER_NAME kill -HUP 1'
+   >> [LOG] Done! Now reload docker-compose/prometheus.yml with 'frigga pr -u http://localhost:9090'
    ```
 
 1. As mentioned in the previous step, reload the `prometheus.yml` to Prometheus, here are two ways of doing it
