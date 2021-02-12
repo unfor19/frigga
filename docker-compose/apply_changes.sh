@@ -2,6 +2,7 @@
 set -e
 set -o pipefail
 
+PROMETHEUS_HOST="http://localhost:9090"
 GRAFANA_API_KEY="$(cat .apikey || true)"
 
 error_msg(){
@@ -13,7 +14,7 @@ error_msg(){
 
 [[ -z "${GRAFANA_API_KEY}" ]] && error_msg ".apikey file is empty"
 
-num_series_before=$(frigga pg -u "http://localhost:9090" -r)
+num_series_before=$(frigga pg -u "$PROMETHEUS_HOST" -r)
 
 # Generate .metrics.json
 frigga grafana-list \
@@ -26,13 +27,15 @@ frigga prometheus-apply \
     --metrics-json-path .metrics.json
 
 # Reload prometheus configuration
-source docker-compose/reload_prom_config.sh show
+frigga prometheus-reload \
+    --prom-url "$PROMETHEUS_HOST" \
+    --raw
 
 echo ">> [LOG] Sleeping for 10 seconds ..."
 sleep 10
 
 # Comparing results
-num_series_after=$(frigga pg -u "http://localhost:9090" -r)
+num_series_after=$(frigga pg -u "$PROMETHEUS_HOST" -r)
 echo ">> [LOG] Before: ${num_series_before}"
 echo ">> [LOG] After: ${num_series_after}"
 if [[ "$num_series_after" -lt "$num_series_before" ]]; then

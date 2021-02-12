@@ -129,6 +129,10 @@ Commands:
      ```
    - Send a POST request to `/-/reload` - this requires Prometheus to be loaded with `--web.enable-lifecycle`, for example, see [docker-compose.yml](docker-compose/docker-compose.yml)
      ```bash
+     $ frigga prometheus-reload --prom-url http://localhost:9090
+     ```
+     Or with curl
+     ```
      $ curl -X POST http://localhost:9090/-/reload
      ```
 1. Make sure the `prometheus.yml` was loaded successfully to Prometheus
@@ -163,7 +167,7 @@ Commands:
    ```bash
    $ bash docker-compose/deploy_stack.sh
 
-   Creating network frigga_net1
+   Creating network "frigga_net1" with the default driver
    ...
    >> Grafana - Generating API Key - for Viewer
    eyJrIjoiT29hNGxGZjAwT2hZcU1BSmpPRXhndXVwUUE4ZVNFcGQiLCJuIjoibG9jYWwiLCJpZCI6MX0=
@@ -187,6 +191,14 @@ Commands:
    >> [LOG] Found a total of 269 unique metrics to keep
    # Generated .metrics.json in pwd
    ```
+1. Check the number of data series **BEFORE** filtering with frigga
+   ```bash
+   $ frigga pg -u http://localhost:9090
+
+   # prometheus-get
+
+   >> [LOG] Total number of data-series: 1863
+   ```
 
 1. Apply the rules to `prometheus.yml`, keep the defaults
 
@@ -204,14 +216,23 @@ Commands:
 1. Reload `prometheus.yml` to Prometheus
 
    ```bash
-   $ bash docker-compose/reload_prom_config.sh show
+   $  frigga pr -u http://localhost:9090
 
-   >> Reloading prometheus.yml configuration file
-   ...
-   level=info ts=2020-06-27T16:25:17.656Z caller=main.go:827 msg="Completed loading of configuration file" filename=/etc/prometheus/prometheus.yml
+   # prometheus-reload
+
+   >> [LOG] Successfully reloaded Prometheus - http://localhost:9090/-/reload
+   ```
+1. Check the number of data series **AFTER** filtering with frigga
+   ```bash
+   $ frigga pg -u http://localhost:9090
+
+   # prometheus-get
+
+   >> [LOG] Total number of data-series: 898
+   # Decreased from 1863 to 898,  decreased 51% !
    ```
 
-1. Go to [Jobs Usage](http://localhost:3000/d/U9Se3uZMz/jobs-usage?orgId=1), you'll see that Prometheus is processing only ~1000 DataSeries (previously ~2800)
+1. Go to [Jobs Usage](http://localhost:3000/d/U9Se3uZMz/jobs-usage?orgId=1), you'll see that Prometheus is processing only ~898 DataSeries (previously ~1863)
    - In case you don't see the change, don't forget to hit the refersh button
 1. Cleanup
    ```bash
