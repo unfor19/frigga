@@ -2,18 +2,21 @@
 ### Docker Build Arguments
 ### Available only during Docker build - `docker build --build-arg ...`
 ### --------------------------------------------------------------------
+ARG ALPINE_VERSION="3.13"
 ARG PYTHON_VERSION="3.9.1"
 ARG APP_NAME="frigga"
 ARG APP_PYTHON_USERBASE="/frigga"
 ARG APP_USER_NAME="appuser"
-ARG APP_GROUP_ID="appgroup"
+ARG APP_USER_ID="1000"
+ARG APP_GROUP_NAME="appgroup"
+ARG APP_GROUP_ID="1000"
 ### --------------------------------------------------------------------
 
 
 ### --------------------------------------------------------------------
 ### Build Stage
 ### --------------------------------------------------------------------
-FROM python:"$PYTHON_VERSION"-slim as build
+FROM python:"$PYTHON_VERSION"-alpine"${ALPINE_VERSION}" as build
 
 ARG APP_PYTHON_USERBASE
 
@@ -52,29 +55,30 @@ CMD ["bash"]
 ### --------------------------------------------------------------------
 ### App Stage
 ### --------------------------------------------------------------------
-FROM python:"$PYTHON_VERSION"-slim as app
+FROM python:"$PYTHON_VERSION"-alpine"${ALPINE_VERSION}" as app
 
 # Fetch values from ARGs that were declared at the top of this file
 ARG APP_NAME
 ARG APP_PYTHON_USERBASE
+ARG APP_USER_ID
 ARG APP_USER_NAME
 ARG APP_GROUP_ID
+ARG APP_GROUP_NAME
 
 # Define env vars
 ENV HOME="$APP_PYTHON_USERBASE" \
     PYTHONUSERBASE="$APP_PYTHON_USERBASE" \
-    APP_NAME="$APP_NAME" \
-    PIP_DISABLE_PIP_VERSION_CHECK=1 \
-    PIP_NO_CACHE_DIR=1
+    APP_NAME="$APP_NAME"
 ENV PATH="${PYTHONUSERBASE}/bin:${PATH}"
 
 # Define workdir
 WORKDIR "$PYTHONUSERBASE"
 
 # Run as a non-root user
-RUN addgroup "$APP_GROUP_ID" && \
-    useradd "$APP_USER_NAME" --gid "$APP_GROUP_ID" --home-dir "$PYTHONUSERBASE" && \
-    chown -R "$APP_USER_NAME":"$APP_GROUP_ID" "$PYTHONUSERBASE"
+RUN \
+    addgroup -g "${APP_GROUP_ID}" "${APP_GROUP_NAME}" && \
+    adduser -H -D -u "$APP_USER_ID" -G "$APP_GROUP_NAME" "$APP_USER_NAME" && \
+    chown -R "$APP_USER_ID":"$APP_GROUP_ID" "$PYTHONUSERBASE"
 USER "$APP_USER_NAME"
 
 # Copy artifacts from Build Stage
