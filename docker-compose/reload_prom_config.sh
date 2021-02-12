@@ -2,7 +2,6 @@
 set -e
 set -o pipefail
 
-show_logs="$1"
 filter="frigga_prometheus"
 prom_container_name=$(docker ps --filter name="${filter}" --format "{{.Names}}" || true)
 if [[ -z "${prom_container_name}" ]]; then
@@ -13,7 +12,7 @@ fi
 echo ">> [LOG] Reloading prometheus.yml configuration file"
 docker exec "${prom_container_name}" kill -HUP 1 || true
 sleep 2
-reload_result=$(docker logs --tail 2 $prom_container_name 2>&1 || true)
+reload_result=$(docker logs --tail 4 $prom_container_name 2>&1 || true)
 reload_success=$(echo "$reload_result" | grep ".*Completed loading of configuration file.*" || true)
 if [[ -n ${reload_success} ]]; then
     echo ""
