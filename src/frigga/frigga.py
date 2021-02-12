@@ -40,15 +40,17 @@ class AliasedGroup(click.Group):
         ctx.fail(f"Too many matches: {', '.join(sorted(matches))}")
 
 
-# @click.group()
 @click.command(cls=AliasedGroup)
 @pass_config
-@click.option('--ci', '-ci', is_flag=True, help="Use this flag to avoid confirmation prompts")  # noqa: E501
+@click.option(
+    '--ci', '-ci',
+    is_flag=True, help="Use this flag to avoid confirmation prompts"
+)
 def cli(config, ci):
-    """No confirmation prompts"""  # noqa: E501
+    """No confirmation prompts"""
     if is_docker():
         ci = True
-    config.ci = ci  # noqa: F821
+    config.ci = ci
 
 
 @cli.command()
@@ -111,8 +113,15 @@ By default:\n
 
 
 @cli.command()
-@click.option('--prom-url', '-u', default='http://localhost:9090', prompt=True, required=True, show_default=False, type=str)  # noqa: 501
-@click.option('--raw', '-r', is_flag=True, default=False, required=False)  # noqa: 501
+@click.option(
+    '--prom-url', '-u',
+    default='http://localhost:9090',
+    prompt=True, required=True, show_default=False, type=str
+)
+@click.option(
+    '--raw', '-r',
+    is_flag=True, default=False, required=False
+)
 def prometheus_reload(prom_url, raw):
     """Alias: pr\n
     Reload Prometheus
@@ -126,7 +135,10 @@ def prometheus_reload(prom_url, raw):
     default='http://localhost:9090',
     prompt=True, required=True, show_default=False, type=str
 )
-@click.option('--raw', '-r', is_flag=True, default=False, required=False)  # noqa: 501
+@click.option(
+    '--raw', '-r',
+    is_flag=True, default=False, required=False
+)
 def prometheus_get(prom_url, raw):
     """Alias: pg\n
     Get total number of data series
