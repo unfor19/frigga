@@ -52,34 +52,60 @@ def cli(config, ci):
 
 
 @cli.command()
-@click.option('--grafana-url', '-gurl', default='http://localhost:3000', prompt=True, required=False, show_default=True, type=str)
-@click.option('--grafana-api-key', '-gkey', prompt=True, required=True, hide_input=True, type=str)
-@click.option('--output-file-path', '-o', default='./.metrics.json', show_default=True, required=False, type=str)
-# @click.option('--file', '-f', prompt=False, default=".", help="Output metrics.json file to pwd")
+@click.option(
+    '--grafana-url', '-gurl',
+    default='http://localhost:3000',
+    prompt=True, required=False, show_default=True, type=str
+)
+@click.option(
+    '--grafana-api-key', '-gkey',
+    prompt=True, required=True, hide_input=True, type=str)
+@click.option(
+    '--output-file-path', '-o',
+    default='./.metrics.json',
+    show_default=True, required=False, type=str
+)
 def grafana_list(grafana_url, grafana_api_key, output_file_path):
     """Alias: gl\n
 Provide Grafana URL and Grafana API Key (Viewer)\n
 Returns a list of metrics that are used in all dashboards"""
     if "http" not in grafana_url:
         print_msg(
-            msg_content="Grafana URL must contain 'http' or 'https'", msg_type="error")
+            msg_content="Grafana URL must contain 'http' or 'https'",
+            msg_type="error"
+        )
     metrics = get_metrics_list(grafana_url, grafana_api_key)
     with open(output_file_path, 'w') as file:
         json.dump(metrics, file, indent=2, sort_keys=True)
 
 
 @cli.command()
-@click.option('--prom-yaml-path', '-ppath', default='docker-compose/prometheus.yml', prompt=True, required=True, show_default=False, type=str)
-@click.option('--metrics-json-path', '-mjpath', default='./.metrics.json', show_default=True, prompt=True, required=False, type=str)
-@click.option('--create-backup-file', '-b', is_flag=True, default=True, required=False)
-@click.option('--skip-rules-file', '-sr', is_flag=True, default=False, required=False)
-def prometheus_apply(prom_yaml_path, metrics_json_path, create_backup_file, skip_rules_file):
+@click.option(
+    '--prom-yaml-path',
+    '-ppath',
+    default='docker-compose/prometheus.yml',
+    prompt=True, required=True, show_default=False, type=str
+)
+@click.option(
+    '--metrics-json-path', '-mjpath',
+    default='./.metrics.json',
+    show_default=True, prompt=True, required=False, type=str
+)
+@click.option(
+    '--create-backup-file', '-b',
+    is_flag=True, default=True, required=False
+)
+@click.option(
+    '--skip-rules-file', '-sr',
+    is_flag=True, default=False, required=False
+)
+def prometheus_apply(prom_yaml_path, metrics_json_path, create_backup_file, skip_rules_file):  # noqa: 501
     """Alias: pa\n
 Applies .metrics.json for a given prometheus.yml file\n
 By default:\n
 - Creates a backup of prometheus.yml to prometheus.yml.bak.yml (same dir as prometheus.yml)\n
 - Creates a .prometheus-rules.yml file with all relabel_configs
-    """
+    """  # noqa: 501
     apply_yaml(prom_yaml_path, metrics_json_path,
                create_backup_file, skip_rules_file)
 
@@ -95,7 +121,11 @@ def prometheus_reload(prom_url, raw):
 
 
 @cli.command()
-@click.option('--prom-url', '-u', default='http://localhost:9090', prompt=True, required=True, show_default=False, type=str)  # noqa: 501
+@click.option(
+    '--prom-url', '-u',
+    default='http://localhost:9090',
+    prompt=True, required=True, show_default=False, type=str
+)
 @click.option('--raw', '-r', is_flag=True, default=False, required=False)  # noqa: 501
 def prometheus_get(prom_url, raw):
     """Alias: pg\n
