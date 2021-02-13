@@ -1,3 +1,4 @@
+import json
 import re
 import requests
 from .config import scrape_value_by_key, print_msg
@@ -61,10 +62,11 @@ def get_metrics_from_expr(expression, ignored_words_list):
     for sign in math_signs:
         expression = expression.replace(sign, " ")
     metrics = expression.split()
+
     return metrics
 
 
-def get_metrics_list(base_url, api_key):
+def get_metrics_list(base_url, api_key, output_file_path=".metrics.json"):
     ignored_words = get_ignored_words()
     if len(ignored_words):
         print_msg(
@@ -124,4 +126,8 @@ def get_metrics_list(base_url, api_key):
     data['all_metrics_num'] = len(data['all_metrics'])
     print_msg(
         msg_content=f"Found a total of {data['all_metrics_num']} unique metrics to keep")
+
+    with open(output_file_path, 'w') as file:
+        json.dump(data, file, indent=2, sort_keys=True)
+
     return data

@@ -81,9 +81,7 @@ Returns a list of metrics that are used in all dashboards"""
             msg_content="Grafana URL must contain 'http' or 'https'",
             msg_type="error"
         )
-    metrics = get_metrics_list(grafana_url, grafana_api_key)
-    with open(output_file_path, 'w') as file:
-        json.dump(metrics, file, indent=2, sort_keys=True)
+    get_metrics_list(grafana_url, grafana_api_key, output_file_path)
 
 
 @cli.command()
