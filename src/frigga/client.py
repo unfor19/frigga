@@ -38,21 +38,27 @@ def grafana_list():
         url=url,
         data={
             "base_url": grafana_url,
-            "api_key": grafana_api_key
+            "api_key": grafana_api_key,
+            "output_file_path": metrics_json_path
         },
         timeout=15
     )
-    data = resp.json()
+    data = resp.text
     return data
 
 
 def prometheus_apply():
     api_path = "/prometheus/apply"
     url = f"{frigga_url}{api_path}"
-    resp = requests.post(url=url, data={
-        "prom_yaml_path": prom_yaml_path,
-        "metrics_json_path": metrics_json_path
-    })
+    resp = requests.post(
+        url=url,
+        data={
+            "prom_yaml_path": prom_yaml_path,
+            "metrics_json_path": metrics_json_path,
+            "create_backup_file": create_back_file,
+            "skip_rules_file": skip_rules_file
+        }
+    )
     data = resp.text
     return data
 
