@@ -47,8 +47,8 @@ def get_ignored_words():
 
 def apply_yaml(prom_yaml_path, metrics_json_path, create_backup_file=True, skip_rules_file=False):  # noqa: 501
     print_msg(msg_content=f"Reading documents from {prom_yaml_path}")
-    with open(prom_yaml_path, "r") as file:
-        prom_yaml = file.read()
+    with open(prom_yaml_path, "r") as fp:
+        prom_yaml = fp.read()
     prom_documents = yaml.safe_load_all(prom_yaml)
     prom_doc = None
     frigga_doc = None
