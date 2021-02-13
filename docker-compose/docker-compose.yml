@@ -34,7 +34,7 @@ services:
 
   webserver:
     container_name: frigga_webserver
-    image: unfor19/frigga:service-1
+    image: unfor19/frigga:latest
     volumes:
       - ./:/etc/prometheus/
     command:

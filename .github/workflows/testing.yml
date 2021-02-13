@@ -17,6 +17,12 @@ jobs:
           sudo apt remove python3-pip
           python -m pip install --upgrade pip
           pip install .
+      - name: Build Docker image
+        env:
+          DOCKER_TAG: unfor19/frigga:latest
+        run: |
+          echo -n 99.99.99 > ./version
+          docker build . --file Dockerfile --tag "${DOCKER_TAG}"        
       - name: Deploy Stack
         env:
           FRIGGA_TESTING: true
