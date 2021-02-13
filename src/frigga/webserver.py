@@ -4,57 +4,60 @@ from .prometheus import get_total_dataseries as prometheus_get
 from .grafana import get_metrics_list as grafana_list
 import logging
 
+
 from flask import Flask, request
-from flask_restful import reqparse, Resource, Api
 from waitress import serve
 
 
 app = Flask(__name__)
-api = Api(app)
 
 
-class GrafanaList(Resource):
-    def post(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument('base_url')
-        parser.add_argument('api_key')
-        args = parser.parse_args()
-        data = grafana_list(base_url=args['base_url'], api_key=args['api_key'])
-        return data, 200
+@app.route('/grafana/list', methods=['POST', ])
+def list_grafana_metrics():
+    args = {
+        "base_url": request.form['base_url'],
+        "api_key": request.form['api_key'],
+        "output_file_path": request.form['output_file_path']
+    }
+    grafana_list(**args)
+    return "Created .metrics.json"
 
 
-class PrometheusGet(Resource):
-    def get(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument('prom_url')
-        parser.add_argument('raw')
-        args = parser.parse_args()
-        data = prometheus_get(**args)
-        logger = logging.getLogger('waitress')
-        logger.info(data)
-        return data, 200
+@app.route('/prometheus/get', methods=['GET'])
+def get_prometheus_dataseries_num():
+    args = {
+        "prom_url": request.args.get('prom_url'),
+        "raw": request.args.get('raw')
+    }
+    data = prometheus_get(**args)
+    logging.basicConfig()
+    logger = logging.getLogger('waitress')
+    logger.info(data)
+    return str(data)
 
 
-class PrometheusApply(Resource):
-    def post(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument('prom_yaml_path')
-        parser.add_argument('metrics_json_path')
-        parser.add_argument('create_backup_file')
-        parser.add_argument('skip_rules_file')
-        args = parser.parse_args()
-        data = prometheus_apply(**args)
-        return data, 200
+@app.route('/prometheus/apply', methods=['POST', ])
+def apply_prometheus():
+    args = {
+        "prom_yaml_path": request.form['prom_yaml_path'],
+        "metrics_json_path": request.form['metrics_json_path'],
+        "create_backup_file": request.form['create_backup_file'],
+        "skip_rules_file": request.form['skip_rules_file']
+    }
+    data = prometheus_apply(**args)
+    print(data)
+    return "applied"
 
 
-class PrometheusReload(Resource):
-    def post(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument('prom_url')
-        parser.add_argument('raw')
-        args = parser.parse_args()
-        data = prometheus_reload(**args)
-        return data, 200
+@app.route('/prometheus/reload', methods=['POST', ])
+def reload_prometheus():
+    args = {
+        "prom_url": request.form['prom_url'],
+        "raw": request.form['raw']
+    }
+    data = prometheus_reload(**args)
+    print(data)
+    return "reloaded"
 
 
 def shutdown_server():
@@ -64,21 +67,13 @@ def shutdown_server():
     func()
 
 
-class WebserverStop(Resource):
-    def post(self):
-        shutdown_server()
-        return 'frigga webserver is shutting down...', 200
+@app.route('/stop', methods=['POST', ])
+def webserver_stop():
+    shutdown_server()
+    return 'frigga webserver is shutting down...'
 
 
 def run(port=8083, debug=False):
-    api.add_resource(WebserverStop, '/stop')
-    api.add_resource(GrafanaList, '/grafana/list')
-    api.add_resource(PrometheusGet, '/prometheus/get')
-    api.add_resource(PrometheusApply, '/prometheus/apply')
-    api.add_resource(PrometheusReload, '/prometheus/reload')
-    logging.basicConfig()
-    logger = logging.getLogger('waitress')
-    logger.setLevel(logging.INFO)
     serve(app, host="0.0.0.0", port=port)
 
 
