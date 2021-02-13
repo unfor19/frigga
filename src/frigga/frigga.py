@@ -1,8 +1,13 @@
 import json
+
 import click
+
+
 from .grafana import get_metrics_list
 from .config import print_msg, is_docker, pass_config
 from .prometheus import apply_yaml, reload_prom, get_total_dataseries
+from .webserver import run as run_webserver
+from .client import main as run_client
 
 
 class AliasedGroup(click.Group):
@@ -144,3 +149,23 @@ def prometheus_get(prom_url, raw):
     Get total number of data series
     """
     get_total_dataseries(prom_url, raw)
+
+
+@cli.command()
+@click.option(
+    '--port', '-p',
+    default=8083,
+    prompt=False, required=False, type=int
+)
+@click.option(
+    '--debug', '-d',
+    is_flag=True,
+    prompt=False, required=False, type=int
+)
+def webserver_run(port=8083, debug=False):
+    run_webserver(port, debug)
+
+
+@cli.command()
+def client_run():
+    run_client()
