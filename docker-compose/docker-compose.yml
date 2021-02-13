@@ -32,6 +32,21 @@ services:
       - prometheus
 
 
+  webserver:
+    container_name: frigga_webserver
+    image: unfor19/frigga:service-1
+    volumes:
+      - ./:/etc/prometheus/
+    command:
+      - "webserver-run"
+    ports:
+      - 8083:8083
+    depends_on:
+      - prometheus
+    networks:
+      - net1
+
+      
   prometheus:
     container_name: frigga_prometheus
     image: prom/prometheus:v2.24.1
