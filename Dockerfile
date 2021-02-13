@@ -2,6 +2,7 @@
 ### Docker Build Arguments
 ### Available only during Docker build - `docker build --build-arg ...`
 ### --------------------------------------------------------------------
+ARG DEBIAN_VERSION="buster"
 ARG ALPINE_VERSION="3.13"
 ARG PYTHON_VERSION="3.9.1"
 ARG APP_NAME="frigga"
@@ -16,7 +17,7 @@ ARG APP_GROUP_ID="1000"
 ### --------------------------------------------------------------------
 ### Build Stage
 ### --------------------------------------------------------------------
-FROM python:"$PYTHON_VERSION"-alpine"${ALPINE_VERSION}" as build
+FROM python:"$PYTHON_VERSION"-slim-"${DEBIAN_VERSION}" as build
 
 ARG APP_PYTHON_USERBASE
 
@@ -34,16 +35,17 @@ WORKDIR "$APP_PYTHON_USERBASE"
 
 # Copy and install requirements - better caching
 COPY requirements.txt .
-RUN pip install --user -r "requirements.txt"
+RUN pip install -r "requirements.txt" --ignore-installed --no-warn-script-location --prefix="/dist"
 
 # Copy the application from Docker build context to WORKDIR
 COPY . .
 
 # Build the application, validate wheel contents and install the application
-RUN python setup.py bdist_wheel && \
+RUN \
+    python setup.py bdist_wheel && \
     find dist/ -type f -name *.whl \
     -exec check-wheel-contents {} \; \
-    -exec pip install --prefix="/dist" --ignore-installed {} \;
+    -exec pip install --prefix="/dist" --ignore-installed --no-warn-script-location {} \;
 
 WORKDIR /dist/
 
@@ -68,7 +70,8 @@ ARG APP_GROUP_NAME
 # Define env vars
 ENV HOME="$APP_PYTHON_USERBASE" \
     PYTHONUSERBASE="$APP_PYTHON_USERBASE" \
-    APP_NAME="$APP_NAME"
+    APP_NAME="$APP_NAME" \
+    PYTHONUNBUFFERED=0
 ENV PATH="${PYTHONUSERBASE}/bin:${PATH}"
 
 # Define workdir
