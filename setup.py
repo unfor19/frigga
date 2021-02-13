@@ -18,5 +18,6 @@ with open(path.join(getcwd(), 'src', PACKAGE_DIR_NAME, '__init__.py'), "w") as f
 setup(
     version=version,
     download_url=f'https://github.com/{GITHUB_OWNER}/{GITHUB_REPOSITORY}/archive/{version}.tar.gz',  # noqa: E501
+    install_requires=["Flask-RESTful>=0.3.8"]
 )
 # -----------------------------------------------
