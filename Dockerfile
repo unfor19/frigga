@@ -45,7 +45,7 @@ RUN \
     python setup.py bdist_wheel && \
     find dist/ -type f -name *.whl \
     -exec check-wheel-contents {} \; \
-    -exec pip install --prefix="/dist" --ignore-installed --no-warn-script-location {} \;
+    -exec pip install --prefix="/dist" -r "requirements.txt" --ignore-installed --no-warn-script-location {} \;
 
 WORKDIR /dist/
 
