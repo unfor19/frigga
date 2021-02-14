@@ -19,8 +19,9 @@ PROM_URL=http://prometheus:9090
 PROM_YAML_PATH=/etc/prometheus/prometheus.yml
 GRAFANA_URL=http://grafana:3000
 SLEEP_SECONDS=15
-" > .env.webserver.ci
-echo "GRAFANA_API_KEY=$GRAFANA_API_KEY" >> .env.webserver.ci
+" > .tmp.env.webserver.ci
+sed '/^[[:space:]]*$/d' .tmp.env.webserver.ci > .env.webserver.ci
+cat .env.webserver.ci
 _DOCKER_TAG="${DOCKER_TAG:-"unfor19/frigga:latest"}"
 
-docker run --rm -t --network host --env-file .env.webserver.ci "$_DOCKER_TAG" client-run
+docker run --rm -t --network host -e GRAFANA_API_KEY --env-file .env.webserver.ci "$_DOCKER_TAG" client-run
