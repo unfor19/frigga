@@ -7,7 +7,7 @@ frigga_url = env['FRIGGA_URL'] if 'FRIGGA_URL' in env else "http://localhost:808
 prom_url = env['PROM_URL'] if 'PROM_URL' in env else "http://localhost:9090"
 prom_yaml_path = env['PROM_YAML_PATH'] if 'PROM_YAML_PATH' in env else "docker-compose/prometheus.yml"  # noqa: 501
 metrics_json_path = env['METRICS_JSON_PATH'] if 'METRICS_JSON_PATH' in env else ".metrics.json"  # noqa: 501
-create_back_file = env['CREATE_BACKUP_FILE'] if 'CREATE_BACKUP_FILE' in env else True  # noqa: 501
+create_backup_file = env['CREATE_BACKUP_FILE'] if 'CREATE_BACKUP_FILE' in env else True  # noqa: 501
 skip_rules_file = env['SKIP_RULES_FILE'] if 'SKIP_RULES_FILE' in env else False  # noqa: 501
 grafana_url = env['GRAFANA_URL'] if 'GRAFANA_URL' in env else "http://localhost:3000"  # noqa: 501
 grafana_api_key = env['GRAFANA_API_KEY'] if 'GRAFANA_API_KEY' in env else None  # noqa: 501
@@ -55,7 +55,7 @@ def prometheus_apply():
         data={
             "prom_yaml_path": prom_yaml_path,
             "metrics_json_path": metrics_json_path,
-            "create_backup_file": create_back_file,
+            "create_backup_file": create_backup_file,
             "skip_rules_file": skip_rules_file
         }
     )
