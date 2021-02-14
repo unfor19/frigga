@@ -34,7 +34,7 @@ services:
 
   webserver:
     container_name: frigga_webserver
-    image: unfor19/frigga:latest
+    image: "${DOCKER_TAG}"
     volumes:
       - ./:/etc/prometheus/
     command:
