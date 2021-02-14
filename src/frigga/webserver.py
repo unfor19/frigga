@@ -1,6 +1,6 @@
 import logging
 
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from waitress import serve
 
 from .prometheus import reload_prom as prometheus_reload
@@ -12,6 +12,11 @@ from .grafana import get_metrics_list as grafana_list
 app = Flask(__name__)
 
 
+@app.errorhandler(500)
+def internal_server_error(e):
+    return jsonify(error=str(e)), 500
+
+
 @app.route('/grafana/list', methods=['POST', ])
 def list_grafana_metrics():
     args = {
@@ -19,7 +24,10 @@ def list_grafana_metrics():
         "api_key": request.form['api_key'],
         "output_file_path": request.form['output_file_path']
     }
-    grafana_list(**args)
+    try:
+        grafana_list(**args)
+    except Exception as e:
+        internal_server_error(e)
     return f"Created {args['output_file_path']}"
 
 
@@ -29,7 +37,11 @@ def get_prometheus_dataseries_num():
         "prom_url": request.args.get('prom_url'),
         "raw": request.args.get('raw')
     }
-    data = prometheus_get(**args)
+    try:
+        data = prometheus_get(**args)
+    except Exception as e:
+        internal_server_error(e)
+
     logging.basicConfig()
     logger = logging.getLogger('waitress')
     logger.info(data)
@@ -44,12 +56,13 @@ def apply_prometheus():
         "create_backup_file": request.form['create_backup_file'],
         "skip_rules_file": request.form['skip_rules_file']
     }
-    data = prometheus_apply(**args)
-    if "[ERROR]" not in data:
-        print(data)
-        return data
-    else:
-        raise Exception(data)
+    try:
+        data = prometheus_apply(**args)
+    except Exception as e:
+        internal_server_error(e)
+
+    print(data)
+    return data
 
 
 @app.route('/prometheus/reload', methods=['POST', ])
