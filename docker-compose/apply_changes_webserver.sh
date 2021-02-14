@@ -13,11 +13,14 @@ error_msg(){
 
 [[ -z "${GRAFANA_API_KEY}" ]] && error_msg ".apikey file is empty"
 
-export \
-    FRIGGA_URL="http://localhost:8083" \
-    PROM_URL="http://prometheus:9090" \
-    PROM_YAML_PATH="/etc/prometheus/prometheus.yml" \
-    GRAFANA_URL="http://grafana:3000" \
-    SLEEP_SECONDS=10
+echo  "
+FRIGGA_URL=http://localhost:8083
+PROM_URL=http://prometheus:9090
+PROM_YAML_PATH=/etc/prometheus/prometheus.yml
+GRAFANA_URL=http://grafana:3000
+GRAFANA_API_KEY=$GRAFANA_API_KEY
+SLEEP_SECONDS=10
+" > .env.webserver.ci
+_DOCKER_TAG="${DOCKER_TAG:-"unfor19/frigga:latest"}"
 
-frigga client-run
+docker run --rm -it --network host --env-file .env.webserver.ci "$_DOCKER_TAG" client-run
