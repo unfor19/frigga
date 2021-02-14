@@ -36,7 +36,7 @@ services:
     container_name: frigga_webserver
     image: "${DOCKER_TAG}"
     volumes:
-      - ./:/etc/prometheus/
+      - ./prometheus.yml:/frigga/prometheus.yml
     command:
       - "webserver-run"
     ports:
@@ -51,7 +51,7 @@ services:
     container_name: frigga_prometheus
     image: prom/prometheus:v2.24.1
     volumes:
-      - ./:/etc/prometheus/
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"
       - "--storage.tsdb.path=/prometheus"
