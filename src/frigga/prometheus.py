@@ -1,9 +1,12 @@
 import json
 import requests
+from pathlib import Path
+from time import time
+
 from bs4 import BeautifulSoup
 import yaml
+
 from .config import print_msg
-from time import time
 
 
 def request_words(url, selector, replace_str="()", replace_with=""):
@@ -46,6 +49,11 @@ def get_ignored_words():
 
 
 def apply_yaml(prom_yaml_path, metrics_json_path, create_backup_file=True, skip_rules_file=False):  # noqa: 501
+    if not Path(prom_yaml_path).is_file():
+        return f"[ERROR] prom_yaml_path does not exist - {prom_yaml_path}"
+    if not Path(metrics_json_path).is_file():
+        return f"[ERROR] metrics_json_path does not exist - {metrics_json_path}"  # noqa: 501
+
     print_msg(msg_content=f"Reading documents from {prom_yaml_path}")
     with open(prom_yaml_path, "r") as fp:
         prom_yaml = fp.read()

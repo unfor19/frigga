@@ -1,12 +1,12 @@
+import logging
+
+from flask import Flask, request
+from waitress import serve
+
 from .prometheus import reload_prom as prometheus_reload
 from .prometheus import apply_yaml as prometheus_apply
 from .prometheus import get_total_dataseries as prometheus_get
 from .grafana import get_metrics_list as grafana_list
-import logging
-
-
-from flask import Flask, request
-from waitress import serve
 
 
 app = Flask(__name__)
@@ -20,7 +20,7 @@ def list_grafana_metrics():
         "output_file_path": request.form['output_file_path']
     }
     grafana_list(**args)
-    return "Created .metrics.json"
+    return f"Created {args['output_file_path']}"
 
 
 @app.route('/prometheus/get', methods=['GET'])
@@ -45,8 +45,11 @@ def apply_prometheus():
         "skip_rules_file": request.form['skip_rules_file']
     }
     data = prometheus_apply(**args)
-    print(data)
-    return "applied"
+    if "[ERROR]" not in data:
+        print(data)
+        return data
+    else:
+        raise Exception(data)
 
 
 @app.route('/prometheus/reload', methods=['POST', ])
