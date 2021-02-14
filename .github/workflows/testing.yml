@@ -38,10 +38,18 @@ jobs:
         uses: actions/setup-python@v1
         with:
           python-version: ${{ matrix.python-version }}
-      - name: docker pull
+      - name: Inject slug/short variables
+        uses: rlespinasse/github-slug-action@v3.x
+      - name: Set env vars
+        run: |
+          export BRANCH_NAME=${{ env.GITHUB_REF_SLUG }}
+          echo DOCKER_TAG=docker.pkg.github.com/${GITHUB_REPOSITORY}/${BRANCH_NAME//\//-} >> $GITHUB_ENV          
+      - name: docker login
         run: |
           echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u $GITHUB_ACTOR --password-stdin
-          docker pull "$DOCKER_TAG" || true 
+      - name: docker pull
+        run: |
+          docker pull "$DOCKER_TAG"
       - name: Install CLI
         run: |
           sudo apt remove python3-pip
@@ -66,14 +74,18 @@ jobs:
         uses: actions/setup-python@v1
         with:
           python-version: ${{ matrix.python-version }}
+      - name: Inject slug/short variables
+        uses: rlespinasse/github-slug-action@v3.x
       - name: Set env vars
         run: |
           export BRANCH_NAME=${{ env.GITHUB_REF_SLUG }}
           echo DOCKER_TAG=docker.pkg.github.com/${GITHUB_REPOSITORY}/${BRANCH_NAME//\//-} >> $GITHUB_ENV          
-      - name: docker pull
+      - name: docker login
         run: |
           echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u $GITHUB_ACTOR --password-stdin
-          docker pull "$DOCKER_TAG" || true
+      - name: docker pull
+        run: |
+          docker pull "$DOCKER_TAG"
       - name: Install CLI
         run: |
           sudo apt remove python3-pip
