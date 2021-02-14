@@ -11,7 +11,7 @@ create_back_file = env['CREATE_BACKUP_FILE'] if 'CREATE_BACKUP_FILE' in env else
 skip_rules_file = env['SKIP_RULES_FILE'] if 'SKIP_RULES_FILE' in env else False  # noqa: 501
 grafana_url = env['GRAFANA_URL'] if 'GRAFANA_URL' in env else "http://localhost:3000"  # noqa: 501
 grafana_api_key = env['GRAFANA_API_KEY'] if 'GRAFANA_API_KEY' in env else None  # noqa: 501
-sleep_seconds = env['SLEEP_SECONDS'] if 'SLEEP_SECONDS' in env else 15  # noqa: 501
+sleep_seconds = float(env['SLEEP_SECONDS']) if 'SLEEP_SECONDS' in env else 15  # noqa: 501
 
 
 def prometheus_get():
