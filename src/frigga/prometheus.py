@@ -114,14 +114,8 @@ def apply_yaml(prom_yaml_path, metrics_json_path, create_backup_file=True, skip_
     if create_backup_file:
         print_msg(msg_content=f"Creating a backup file for {prom_yaml_path}")
         with open(prom_yaml_path, 'r') as source_fs:
-            try:
-                with open(f"{prom_yaml_path}.bak.yml", 'w') as target_fs:
-                    target_fs.write(source_fs.read())
-            except PermissionError as e:
-                print(f"Cannot write to - {prom_yaml_path}.bak.yml - {e}")
-                print("Attempt to write to - /tmp/prometheus.bak.yml")
-                with open("/tmp/prometheus.bak.yml", 'w') as target_fs:
-                    target_fs.write(source_fs.read())
+            with open("prometheus.yml.bak.yml", 'w') as target_fs:
+                target_fs.write(source_fs.read())
 
     # write new prom frigga yaml
     print_msg(
