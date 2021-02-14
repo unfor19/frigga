@@ -16,7 +16,7 @@ error_msg(){
 export \
     FRIGGA_URL="http://localhost:8083" \
     PROM_URL="http://prometheus:9090" \
-    PROM_YAML_PATH="/etc/prometheus/prometheus.yml"
+    PROM_YAML_PATH="/etc/prometheus/prometheus.yml" \
     GRAFANA_URL="http://grafana:3000" \
     SLEEP_SECONDS=10
 
