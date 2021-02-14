@@ -1,6 +1,6 @@
 import logging
 
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, abort
 from waitress import serve
 
 from .prometheus import reload_prom as prometheus_reload
@@ -27,7 +27,7 @@ def list_grafana_metrics():
     try:
         grafana_list(**args)
     except Exception as e:
-        internal_server_error(e)
+        abort(500, e)
     return f"Created {args['output_file_path']}"
 
 
@@ -40,7 +40,7 @@ def get_prometheus_dataseries_num():
     try:
         data = prometheus_get(**args)
     except Exception as e:
-        internal_server_error(e)
+        abort(500, e)
 
     logging.basicConfig()
     logger = logging.getLogger('waitress')
@@ -59,8 +59,7 @@ def apply_prometheus():
     try:
         data = prometheus_apply(**args)
     except Exception as e:
-        internal_server_error(e)
-
+        abort(500, e)
     print(data)
     return data
 
@@ -71,7 +70,10 @@ def reload_prometheus():
         "prom_url": request.form['prom_url'],
         "raw": request.form['raw']
     }
-    data = prometheus_reload(**args)
+    try:
+        data = prometheus_reload(**args)
+    except Exception as e:
+        abort(500, e)
     print(data)
     return "reloaded"
 
