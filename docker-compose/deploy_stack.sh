@@ -31,7 +31,7 @@ network=$(docker network ls | grep frigga_net || true)
 cp docker-compose/prometheus-original.yml docker-compose/prometheus.yml
 
 # fixed permissions denied when frigga tries to change prometheus.yml
-chown 1000:1000 docker-compose/prometheus.yml
+chmod 777 docker-compose/prometheus.yml
 
 _DOCKER_TAG="${DOCKER_TAG:-"unfor19/frigga:latest"}"
 echo "DOCKER_TAG=${_DOCKER_TAG}" > .env.ci
