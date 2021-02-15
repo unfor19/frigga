@@ -35,7 +35,7 @@ WORKDIR "$APP_PYTHON_USERBASE"
 
 # Copy and install requirements - better caching
 COPY requirements.txt .
-RUN pip install -r "requirements.txt" --ignore-installed --no-warn-script-location --prefix="/dist"
+RUN pip install -r "requirements.txt" --no-warn-script-location --prefix="/dist"
 
 # Copy the application from Docker build context to WORKDIR
 COPY . .
