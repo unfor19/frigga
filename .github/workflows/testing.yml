@@ -86,6 +86,30 @@ jobs:
       - name: Apply Changes
         run: ./docker-compose/apply_changes_webserver.sh
 
+  ubuntu-websocket:
+    needs: docker_build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Inject slug/short variables
+        uses: rlespinasse/github-slug-action@v3.x
+      - name: Set env vars
+        run: |
+          export BRANCH_NAME=${{ env.GITHUB_REF_SLUG }}
+          echo DOCKER_TAG=docker.pkg.github.com/${GITHUB_REPOSITORY}/${BRANCH_NAME//\//-}:test >> $GITHUB_ENV          
+      - name: docker login
+        run: |
+          echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u $GITHUB_ACTOR --password-stdin
+      - name: docker pull
+        run: |
+          docker pull "$DOCKER_TAG"
+      - name: Deploy Stack
+        env:
+          FRIGGA_TESTING: true
+        run: bash docker-compose/deploy_stack.sh
+      - name: Apply Changes
+        run: ./docker-compose/apply_changes_websocket.sh        
+
   minikube:
     runs-on: ubuntu-latest
     steps:
