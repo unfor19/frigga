@@ -6,6 +6,8 @@ from .config import print_msg, is_docker, pass_config
 from .prometheus import apply_yaml, reload_prom, get_total_dataseries
 from .webserver import run as run_webserver
 from .client import main as run_client
+from .wsserver import run_wss as run_websocket_webserver
+from .wsclient import main as run_websocket_client
 
 
 class AliasedGroup(click.Group):
@@ -163,5 +165,20 @@ def webserver_run(port=8083, debug=False):
 
 
 @cli.command()
+@click.option(
+    '--port', '-p',
+    default=8084,
+    prompt=False, required=False, type=int
+)
+def webserver_websocket_run(port):
+    run_websocket_webserver(port)
+
+
+@cli.command()
 def client_run():
     run_client()
+
+
+@cli.command()
+def client_websocket_run():
+    run_websocket_client()

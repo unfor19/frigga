@@ -8,7 +8,7 @@ from .prometheus import apply_yaml as prometheus_apply
 from .prometheus import reload_prom as prometheus_reload
 
 
-async def hello(websocket, path):
+async def msg(websocket, path):
     received = await websocket.recv()
     try:
         received = json.loads(received)
@@ -37,7 +37,12 @@ async def hello(websocket, path):
     await websocket.send(message)
     print(f"Sent back: {message}")
 
-start_server = websockets.serve(hello, "localhost", 8084)
 
-asyncio.get_event_loop().run_until_complete(start_server)
-asyncio.get_event_loop().run_forever()
+def run_wss(port=8084):
+    start_server = websockets.serve(msg, "0.0.0.0", port)
+    asyncio.get_event_loop().run_until_complete(start_server)
+    asyncio.get_event_loop().run_forever()
+
+
+if __name__ == '__main__':
+    run_wss()

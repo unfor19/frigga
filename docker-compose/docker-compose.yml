@@ -46,6 +46,21 @@ services:
     networks:
       - net1
 
+
+  webserver_socket:
+    container_name: frigga_webserver_socket
+    image: "${DOCKER_TAG}"
+    volumes:
+      - ./prometheus.yml:/frigga/prometheus.yml
+    command:
+      - "webserver-websocket-run"
+    ports:
+      - 8084:8084
+    depends_on:
+      - prometheus
+    networks:
+      - net1      
+
       
   prometheus:
     container_name: frigga_prometheus
