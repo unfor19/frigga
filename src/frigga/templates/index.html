@@ -15,8 +15,8 @@
         <h1>frigga</h1>
     </header>
     <main>
-        <div>
-            <div>
+        <article>
+            <section>
                 <div>
                     <label for="prom_url">Prometheus URL</label>
                     <input id="prom_url" type="text" value="http://prometheus:9090" />
@@ -25,25 +25,27 @@
                     <label for="raw">Return raw data</label>
                     <input id="raw" type="text" value="true" />
                 </div>
-            </div>
-            <div>
+            </section>
+            <section>
                 <h2>Total number of metrics</h2>
-            </div>
-            <div>
-                <div>
+                <colgroup>
+                    <col>
                     <input id="prometheus_get" type="button" onclick="getMetrics()" value="Get" />
-                </div>
-                <div>
-                    <label for="total_num_metrics">Total number of metrics: </label>
+                    </col>
+                    <col>
+                    <label for="total_num_metrics">Total number of metrics:</label>
                     <span id="total_num_metrics"></span>
-                </div>
-
-            </div>
-        </div>
-        <footer>
-            https://github.com/unfor19/friggahttps://github.com/unfor19/frigga
-        </footer>
+                    </col>
+                </colgroup>
+            </section>
+        </article>
     </main>
+    <footer>
+        <section>
+            <h3>References</h3>
+            <a href="https://github.com/unfor19/friggahttps://github.com/unfor19/frigga">GitHub</a>
+        </section>
+    </footer>
     <script type="text/javascript">
         frigga_url = "http://localhost:8083";
         function getMetrics() {
@@ -55,12 +57,11 @@
                     // Typical action to be performed when the document is ready:
                     document.getElementById("total_num_metrics").innerHTML = xhttp.responseText;
                 } else {
-                    document.getElementById("total_num_metrics").innerHTML = this.statusText;
+                    document.getElementById("total_num_metrics").innerHTML = xhttp.statusText;
                 }
             };
             var query_params = "prom_url=" + prom_url + "&raw=" + raw;
-            query_params = query_params.replace("%2F", "/")
-            console.log(query_params)
+            query_params = query_params.replace("%2F", "/");
             xhttp.open("GET", frigga_url + "/prometheus/get?" + query_params, true);
             xhttp.send();
 

@@ -24,7 +24,11 @@ def internal_server_error(e):
 @app.route('/', methods=['GET', ])
 def root():
     logger.info(request)
-    return render_template('index.html')
+    try:
+        rendered_template = render_template('index.html')
+        return rendered_template
+    except Exception as e:
+        abort(500, e)
 
 
 @app.route('/grafana/list', methods=['POST', ])
