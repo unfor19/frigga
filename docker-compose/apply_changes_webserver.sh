@@ -24,4 +24,4 @@ sed '/^[[:space:]]*$/d' .tmp.env.webserver.ci > .env.webserver.ci
 cat .env.webserver.ci
 _DOCKER_TAG="${DOCKER_TAG:-"unfor19/frigga:latest"}"
 
-docker run --rm -t --network host -e GRAFANA_API_KEY --env-file .env.webserver.ci "$_DOCKER_TAG" client-run
+docker run --rm -t --network host -e GRAFANA_API_KEY --env-file .env.webserver.ci "$_DOCKER_TAG" client-start --use-http

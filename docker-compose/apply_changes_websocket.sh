@@ -24,4 +24,4 @@ sed '/^[[:space:]]*$/d' .tmp.env.websocket.ci > .env.websocket.ci
 cat .env.websocket.ci
 _DOCKER_TAG="${DOCKER_TAG:-"unfor19/frigga:latest"}"
 
-docker run --rm -t --network host -e GRAFANA_API_KEY --env-file .env.websocket.ci "$_DOCKER_TAG" client-websocket-run
+docker run --rm -t --network host -e GRAFANA_API_KEY --env-file .env.websocket.ci "$_DOCKER_TAG" client-start
