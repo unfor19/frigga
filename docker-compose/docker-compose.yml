@@ -38,7 +38,10 @@ services:
     volumes:
       - ./prometheus.yml:/frigga/prometheus.yml
     command:
-      - "webserver-run"
+      - "webserver-start"
+      - "--port"
+      - "8083"
+      - "--use-http"
     ports:
       - 8083:8083
     depends_on:
@@ -53,13 +56,13 @@ services:
     volumes:
       - ./prometheus.yml:/frigga/prometheus.yml
     command:
-      - "webserver-websocket-run"
+      - "webserver-start"
     ports:
       - 8084:8084
     depends_on:
       - prometheus
     networks:
-      - net1      
+      - net1
 
       
   prometheus:

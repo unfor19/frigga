@@ -13,9 +13,11 @@ from .wsclient import main as run_websocket_client
 class AliasedGroup(click.Group):
     def get_command(self, ctx, cmd_name):
         app_aliases = {
+            "c": "client",
             "m": "main",
             "p": "prometheus",
             "g": "grafana",
+            "w": "webserver"
         }
         action_aliases = {
             "a": "apply",
@@ -23,6 +25,7 @@ class AliasedGroup(click.Group):
             "d": "delete",
             "l": "list",
             "r": "reload",
+            "s": "start"
         }
         if len(cmd_name) == 2:
             words = []
@@ -107,6 +110,7 @@ Returns a list of metrics that are used in all dashboards"""
 def prometheus_apply(prom_yaml_path, metrics_json_path, create_backup_file, skip_rules_file):  # noqa: 501
     """Alias: pa\n
 Applies .metrics.json for a given prometheus.yml file\n
+
 By default:\n
 - Creates a backup of prometheus.yml to prometheus.yml.bak.yml (same dir as prometheus.yml)\n
 - Creates a .prometheus-rules.yml file with all relabel_configs
@@ -151,34 +155,46 @@ def prometheus_get(prom_url, raw):
 
 @cli.command()
 @click.option(
-    '--port', '-p',
-    default=8083,
-    prompt=False, required=False, type=int
-)
-@click.option(
     '--debug', '-d',
     is_flag=True,
     prompt=False, required=False, type=int
 )
-def webserver_run(port=8083, debug=False):
-    run_webserver(port, debug)
-
-
-@cli.command()
 @click.option(
     '--port', '-p',
     default=8084,
     prompt=False, required=False, type=int
 )
-def webserver_websocket_run(port):
-    run_websocket_webserver(port)
+@click.option(
+    '--use-http',
+    is_flag=True,
+    default=False,
+    prompt=False, required=False
+)
+def webserver_start(debug, port, use_http):
+    """Alias: ws\n
+Runs a webserver that will execute frigga's commands, according to the client's requests\n
+The webserver should have network access to Grafana and Prometheus instances, and read/write permission to the prometheus.yml file.\n
+By default:\n
+- Runs as a WebSockets server, to use an HTTP server, add the `--use-http` flag
+    """  # noqa: 501
+    if not use_http:
+        run_websocket_webserver(port, debug)
+    else:
+        run_webserver(port, debug)
 
 
 @cli.command()
-def client_run():
-    run_client()
-
-
-@cli.command()
-def client_websocket_run():
-    run_websocket_client()
+@click.option(
+    '--use-http',
+    is_flag=True,
+    default=False,
+    prompt=False, required=False
+)
+def client_start(use_http):
+    """Alias: cs\n
+    Runs a WebSockets client, to use HTTP, add `--use-http`\n
+    - Order - prometheus-get (before change), grafana-list, prometheus-apply, prometheus-get (after change)"""  # noqa: 501
+    if not use_http:
+        run_websocket_client()
+    else:
+        run_client()
