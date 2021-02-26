@@ -74,12 +74,21 @@ def get_metrics_list(base_url, api_key, output_file_path=".metrics.json"):
         )
     else:
         print_msg(msg_content="No words to ignore, that's weird",
-                  msg_error="warning")
-    dashboards = grafana_http_request(
-        "/api/search?query=",
-        api_key,
-        base_url
-    ).json()
+                  msg_type="warning")
+
+    try:
+        dashboards = grafana_http_request(
+            "/api/search?query=",
+            api_key,
+            base_url
+        )
+    except Exception as error:
+        print_msg(
+            msg_content=error.__str__(),
+            msg_type="error"
+        )
+
+    dashboards = dashboards.json()
     data = {
         "dashboards": dict()
     }
