@@ -18,6 +18,7 @@ _DOCKER_TAG="${DOCKER_TAG:-"unfor19/frigga:latest"}"
 docker run --rm -t --network host "$_DOCKER_TAG" \
     client-start --grafana-url http://grafana:3000 \
         --prom-url http://prometheus:9090 \
+        --frigga-url http://localhost:8084 \
         --grafana-api-key "${GRAFANA_API_KEY}" \
         --prom-yaml-path "prometheus.yml" \
         --raw 
