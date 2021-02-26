@@ -58,6 +58,8 @@ services:
       - ./prometheus.yml:/frigga/prometheus.yml
     command:
       - "webserver-start"
+      - "--port"
+      - "8084"
       - "--debug"
     ports:
       - 8084:8084
