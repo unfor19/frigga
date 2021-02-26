@@ -185,16 +185,65 @@ By default:\n
 
 @cli.command()
 @click.option(
+    '--prom-url', '-u',
+    default='http://localhost:9090',
+    required=False, type=str
+)
+@click.option(
+    '--raw', '-r',
+    is_flag=True, default=False, required=False
+)
+@click.option(
+    '--metrics-json-path', '-mjpath',
+    default='./.metrics.json',
+    required=False, type=str
+)
+@click.option(
+    '--create-backup-file', '-b',
+    is_flag=True, default=True, required=False
+)
+@click.option(
+    '--skip-rules-file', '-sr',
+    is_flag=True, default=False, required=False
+)
+@click.option(
+    '--grafana-url', '-gurl',
+    default='http://localhost:3000',
+    required=False, type=str
+)
+@click.option(
+    '--frigga-url', '-gurl',
+    default='ws://localhost:8084',
+    required=False, type=str
+)
+@click.option(
+    '--grafana-api-key', '-gkey',
+    required=False, type=str)
+@click.option(
+    '--output-file-path', '-o',
+    default='./.metrics.json',
+    required=False, type=str
+)
+@click.option(
+    '--prom-yaml-path',
+    '-ppath',
+    default='prometheus.yml',
+    required=False, type=str
+)
+@click.option(
     '--use-http',
     is_flag=True,
     default=False,
     prompt=False, required=False
 )
-def client_start(use_http):
+def client_start(use_http, **kwargs):
     """Alias: cs\n
     Runs a WebSockets client, to use HTTP, add `--use-http`\n
-    - Order - prometheus-get (before change), grafana-list, prometheus-apply, prometheus-get (after change)"""  # noqa: 501
+    - Order of commands- prometheus-get (before change), grafana-list, prometheus-apply, prometheus-get (after change)\n
+    - Priority of args:\n
+    client arguments > client env vars > server arguments > server env vars"""  # noqa: 501
+
     if not use_http:
-        run_websocket_client()
+        run_websocket_client(kwargs)
     else:
-        run_client()
+        run_client(kwargs)
