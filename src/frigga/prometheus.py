@@ -168,10 +168,16 @@ def get_total_dataseries(prom_url="http://localhost:9090", raw=False):
     query_string_parameters = f"query={query}&start={timestamp}"
     url = f"{target_url}?{query_string_parameters}"
 
-    response = requests.get(url, allow_redirects=True)
+    try:
+        response = requests.get(url, allow_redirects=True)
+    except Exception as error:
+        print_msg(
+            msg_content=error.__str__(),
+            msg_type='error'
+        )
     if 200 <= response.status_code < 204:
-        resp = response.json()
         try:
+            resp = response.json()
             data = int(resp['data']['result'][0]['value'][1])
         except Exception as e:
             print_msg(
