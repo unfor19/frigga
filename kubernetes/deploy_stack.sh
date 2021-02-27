@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 set -o pipefail
+
+# Copy relevant files to `.frigga/`
 source kubernetes/minikube_rsync.sh
 
 kubectl apply -f kubernetes/debug.yml
@@ -11,8 +13,10 @@ while [[ -z "$(kubectl get pods | grep debug.*Running)" ]]; do
 done
 echo ">> [LOG] Debug pod is ready!"
 POD_DEBUG=$(kubectl get pods | grep debug.*Running | cut -f 1 -d " ")
-# kubectl exec -it $POD_DEBUG bash "mkdir -p /root/frigga"
+
+# Copy from `.frigga/` to debug pod
 kubectl cp .frigga/ default/$POD_DEBUG:/root/frigga/
+
 kubectl apply \
     -f kubernetes/exporters.yml \
     -f kubernetes/monitoring.yml
