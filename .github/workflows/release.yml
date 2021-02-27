@@ -74,6 +74,7 @@ jobs:
         run: bash docker-compose/apply_changes.sh  
       - name: Build Package
         run: |
+          pip install twine==3.1.1
           python setup.py sdist bdist_wheel
           twine check ./dist/*
       - name: Publish to PyPi
