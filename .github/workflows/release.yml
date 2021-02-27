@@ -5,7 +5,34 @@ on:
     types: [published, edited]
 
 jobs:
+  docker_build:
+    runs-on: ubuntu-latest
+    name: docker build
+    steps:
+      - uses: actions/checkout@v2
+      - name: Inject slug/short variables
+        uses: rlespinasse/github-slug-action@v3.x
+      - name: Set env vars
+        run: |
+          export RELEASE_VERSION=${GITHUB_REF_SLUG}
+          echo "RELEASE_VERSION=${RELEASE_VERSION}" >> $GITHUB_ENV
+          export _DOCKER_TAG=docker.pkg.github.com/${GITHUB_REPOSITORY}/frigga:test-${RELEASE_VERSION//\//-}
+          echo "DOCKER_TAG=${_DOCKER_TAG}" >> $GITHUB_ENV
+      - name: docker login
+        run: |
+          echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u $GITHUB_ACTOR --password-stdin
+      - name: docker pull
+        run: |
+          docker pull "$DOCKER_TAG" || true
+      - name: docker build
+        run: docker build . -t cached --cache-from="$DOCKER_TAG"
+      - name: docker tag
+        run: docker tag cached "$DOCKER_TAG"
+      - name: docker push
+        run: docker push "$DOCKER_TAG" || true
+
   publish:
+    needs: docker_build
     runs-on: ubuntu-latest
     env:
       APP_NAME: frigga
@@ -23,7 +50,7 @@ jobs:
           export RELEASE_VERSION=${GITHUB_REF_SLUG}
           echo -n $RELEASE_VERSION > ./version
           echo "RELEASE_VERSION=${RELEASE_VERSION}" >> $GITHUB_ENV
-          export _DOCKER_TAG="unfor19/${APP_NAME}:${RELEASE_VERSION}"
+          export _DOCKER_TAG=docker.pkg.github.com/${GITHUB_REPOSITORY}/frigga:test-${RELEASE_VERSION//\//-}
           echo "DOCKER_TAG=${_DOCKER_TAG}" >> $GITHUB_ENV
       - name: Validate Release Version
         run: |
