@@ -251,5 +251,6 @@ def client_start(use_http, **kwargs):
 
 @cli.command()
 def version():
+    """Print the installed version"""
     from .__init__ import __version__ as version
     print(version)
