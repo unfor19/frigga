@@ -56,7 +56,6 @@ spec:
           hostPath:
             path: /home/docker/.frigga/kubernetes/
             type: Directory
-
 ---
 apiVersion: v1
 kind: Service
@@ -109,3 +108,76 @@ spec:
           hostPath:
             path: /home/docker/.frigga/kubernetes/grafana/provisioning/
             type: Directory
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: victoriametrics-tsdb
+  namespace: default
+spec:
+  selector:
+    app: victoriametrics-tsdb
+  ports:
+    - name: http
+      protocol: TCP
+      port: 8428
+      targetPort: 8428
+    - name: influx-tcp
+      protocol: TCP
+      port: 8089
+      targetPort: 8089
+    - name: influx-udp
+      protocol: UDP
+      port: 8089
+      targetPort: 8089
+    - name: graphite-tcp
+      protocol: TCP
+      port: 2003
+      targetPort: 2003
+    - name: graphite-udp
+      protocol: UDP
+      port: 2003
+      targetPort: 2003
+    - name: opentsdb-tcp
+      protocol: TCP
+      port: 4242
+      targetPort: 4242
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: victoriametrics-tsdb
+  namespace: default
+  labels:
+    app: victoriametrics-tsdb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: victoriametrics-tsdb
+  template:
+    metadata:
+      labels:
+        app: victoriametrics-tsdb
+    spec:
+      containers:
+        - name: victoriametrics-tsdb
+          image: victoriametrics/victoria-metrics:v1.53.1
+          ports:
+            - containerPort: 8428
+            - containerPort: 8089
+            - containerPort: 2003
+            - containerPort: 4242
+          args:
+            - "--storageDataPath=/storage"
+            - "--graphiteListenAddr=:2003"
+            - "--opentsdbListenAddr=:4242"
+            - "--httpListenAddr=:8428"
+            - "--influxListenAddr=:8089"
+          resources:
+            limits:
+              cpu: 100m
+              memory: 200Mi
+            requests:
+              cpu: 100m
+              memory: 200Mi
