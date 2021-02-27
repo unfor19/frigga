@@ -35,13 +35,13 @@ $ pip install frigga
 ### Docker
 
 ```bash
-docker run --rm -it -v "$PWD"/:/code/ --workdir=/code/ unfor19/frigga
+docker run --rm -it unfor19/frigga
 ```
 
 For ease of use, add an alias in your `~/.bashrc` file
 
 ```bash
-alias frigga="docker run --rm -it -v "$PWD"/:/code/ --workdir=/code/ unfor19/frigga"
+alias frigga="docker run --rm -it unfor19/frigga"
 ```
 
 ## Available Commands
