@@ -1,3 +1,4 @@
+import json
 import re
 import requests
 from .config import scrape_value_by_key, print_msg
@@ -17,10 +18,10 @@ def grafana_http_request(path, api_key, base_url="http://localhost:3000"):
             msg_content=f"Successful response from {url}", msg_type='log')
         return response
     if response.status_code == 401:
-        print_msg(f"API Key is invalid", response.text,
+        print_msg("API Key is invalid", response.text,
                   'error')
     else:
-        print_msg(f"Unknown response", response.text, 'error')
+        print_msg("Unknown response", response.text, 'error')
     return response
 
 
@@ -61,22 +62,33 @@ def get_metrics_from_expr(expression, ignored_words_list):
     for sign in math_signs:
         expression = expression.replace(sign, " ")
     metrics = expression.split()
+
     return metrics
 
 
-def get_metrics_list(base_url, api_key):
+def get_metrics_list(base_url, api_key, output_file_path=".metrics.json"):
     ignored_words = get_ignored_words()
     if len(ignored_words):
         print_msg(
-            msg_content=f"Found {len(ignored_words)} words to ignore in expressions")
+            msg_content=f"Found {len(ignored_words)} words to ignore in expressions"  # noqa: 501
+        )
     else:
         print_msg(msg_content="No words to ignore, that's weird",
-                  msg_error="warning")
-    dashboards = grafana_http_request(
-        "/api/search?query=",
-        api_key,
-        base_url
-    ).json()
+                  msg_type="warning")
+
+    try:
+        dashboards = grafana_http_request(
+            "/api/search?query=",
+            api_key,
+            base_url
+        )
+    except Exception as error:
+        print_msg(
+            msg_content=error.__str__(),
+            msg_type="error"
+        )
+
+    dashboards = dashboards.json()
     data = {
         "dashboards": dict()
     }
@@ -86,10 +98,10 @@ def get_metrics_list(base_url, api_key):
             api_key,
             base_url
         ).json()
-        dashboard_gnetid = dashboard_body['dashboard']['gnetId'] if 'gnetId' in dashboard_body[
-            'meta'] and dashboard_body['meta']['gnetId'] else "null"
-        dashboard_name = dashboard_body['meta']['slug'] if 'slug' in dashboard_body[
-            'meta'] and dashboard_body['meta']['slug'] else "null"
+        dashboard_gnetid = dashboard_body['dashboard']['gnetId'] \
+            if 'gnetId' in dashboard_body['meta'] and dashboard_body['meta']['gnetId'] else "null"  # noqa: 501
+        dashboard_name = dashboard_body['meta']['slug'] \
+            if 'slug' in dashboard_body['meta'] and dashboard_body['meta']['slug'] else "null"  # noqa: 501
         print_msg(msg_content=f"Getting metrics from {dashboard_name}")
         expressions = \
             scrape_value_by_key(dashboard_body, "expr", str, []) \
@@ -99,7 +111,7 @@ def get_metrics_list(base_url, api_key):
             try:
                 expr_metrics = get_metrics_from_expr(expression, ignored_words)
             except TypeError:
-                print_msg(msg_content=f"The following expression is corrupted",
+                print_msg(msg_content="The following expression is corrupted",
                           data=expression, msg_type='e')
             if expr_metrics:
                 for metric in expr_metrics:
@@ -115,7 +127,8 @@ def get_metrics_list(base_url, api_key):
         data['dashboards'][dashboard_name]['num_metrics'] = len(
             dashboard_metrics)
         print_msg(
-            msg_content=f"Found {data['dashboards'][dashboard_name]['num_metrics']} metrics")
+            msg_content=f"Found {data['dashboards'][dashboard_name]['num_metrics']} metrics"  # noqa: 501
+        )
 
     all_metrics = []
     for dashboard_name in data['dashboards']:
@@ -123,5 +136,10 @@ def get_metrics_list(base_url, api_key):
     data['all_metrics'] = sorted(list(set(all_metrics)))
     data['all_metrics_num'] = len(data['all_metrics'])
     print_msg(
-        msg_content=f"Found a total of {data['all_metrics_num']} unique metrics to keep")
+        msg_content=f"Found a total of {data['all_metrics_num']} unique metrics to keep"  # noqa: 501
+    )
+
+    with open(output_file_path, 'w') as file:
+        json.dump(data, file, indent=2, sort_keys=True)
+
     return data

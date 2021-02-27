@@ -31,7 +31,7 @@ def print_msg(msg_content, data=None, msg_type='l', terminate=False):
         print(msg)
 
     if terminate:
-        exit()
+        raise Exception(msg)
 
 
 def print_json(obj):

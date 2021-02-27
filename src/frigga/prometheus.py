@@ -1,9 +1,11 @@
 import json
 import requests
+from time import time
+
 from bs4 import BeautifulSoup
 import yaml
+
 from .config import print_msg
-from time import time
 
 
 def request_words(url, selector, replace_str="()", replace_with=""):
@@ -13,7 +15,8 @@ def request_words(url, selector, replace_str="()", replace_with=""):
             msg_content=f"Successfully got words from {url}", msg_type='log')
     else:
         print_msg(
-            msg_content=f"Failed to reach {url}, have you provided the '--web.enable-admin-api' in Prometheus?")
+            msg_content=f"Failed to reach {url}, have you provided the '--web.enable-admin-api' in Prometheus?"  # noqa: 501
+        )
     html_page_text = response.text
     soup = BeautifulSoup(html_page_text, 'html.parser')
     return [
@@ -25,16 +28,17 @@ def request_words(url, selector, replace_str="()", replace_with=""):
 def get_ignored_words():
     """Get the list of words to ignore when scraping from Grafana"""
     print_msg(
-        msg_content="Getting the list of words to ignore when scraping from Grafana")
+        msg_content="Getting the list of words to ignore when scraping from Grafana"  # noqa: 501
+    )
     words_list = []
 
     prometheus_urls = [
         {
-            "url": "https://prometheus.io/docs/prometheus/latest/querying/functions/",
+            "url": "https://prometheus.io/docs/prometheus/latest/querying/functions/",  # noqa: 501
             "selectors": ".toc-right ul li code"
         },
         {
-            "url": "https://prometheus.io/docs/prometheus/latest/querying/operators/",
+            "url": "https://prometheus.io/docs/prometheus/latest/querying/operators/",  # noqa: 501
             "selectors": "ul li code"
         }
     ]
@@ -43,10 +47,10 @@ def get_ignored_words():
     return sorted(list(set(words_list)))
 
 
-def apply_yaml(prom_yaml_path, metrics_json_path, create_backup_file=True, skip_rules_file=False):
+def apply_yaml(prom_yaml_path, metrics_json_path, create_backup_file=True, skip_rules_file=False):  # noqa: 501
     print_msg(msg_content=f"Reading documents from {prom_yaml_path}")
-    with open(prom_yaml_path, "r") as file:
-        prom_yaml = file.read()
+    with open(prom_yaml_path, "r") as fp:
+        prom_yaml = fp.read()
     prom_documents = yaml.safe_load_all(prom_yaml)
     prom_doc = None
     frigga_doc = None
@@ -57,16 +61,20 @@ def apply_yaml(prom_yaml_path, metrics_json_path, create_backup_file=True, skip_
             frigga_doc = doc
     if not prom_doc:
         print_msg(
-            msg_content="Missing 'scrape_configs' in prometheus.yml", msg_type="error")
+            msg_content="Missing 'scrape_configs' in prometheus.yml",
+            msg_type="error"
+        )
     if not frigga_doc:
         print_msg(
-            msg_content="Missing frigga document in prometheus.yml", msg_type="error")
-    print_msg(msg_content=f"Found relevant documents")
-    print_msg(msg_content=f"Loading metrics.json")
+            msg_content="Missing frigga document in prometheus.yml",
+            msg_type="error"
+        )
+    print_msg(msg_content="Found relevant documents")
+    print_msg(msg_content="Loading metrics.json")
     with open(metrics_json_path, "r") as file:
         metrics_dict = json.load(file)
 
-    print_msg(msg_content=f"Generating metrics_relabel_configs in memory")
+    print_msg(msg_content="Generating metrics_relabel_configs in memory")
     relabel_configs = []
     for metric in metrics_dict['all_metrics']:
         relabel_configs.append({
@@ -90,7 +98,7 @@ def apply_yaml(prom_yaml_path, metrics_json_path, create_backup_file=True, skip_
         print_msg(
             msg_content=f"Writing relabel_configs to {rules_file_path}")
         with open(rules_file_path, 'w') as fs:
-            data = yaml.dump_all(
+            yaml.dump_all(
                 documents=[relabel_configs],
                 stream=fs, default_flow_style=False,
                 Dumper=noalias_dumper,
@@ -106,21 +114,23 @@ def apply_yaml(prom_yaml_path, metrics_json_path, create_backup_file=True, skip_
     if create_backup_file:
         print_msg(msg_content=f"Creating a backup file for {prom_yaml_path}")
         with open(prom_yaml_path, 'r') as source_fs:
-            with open(f"{prom_yaml_path}.bak.yml", 'w') as target_fs:
+            with open("prometheus.yml.bak.yml", 'w') as target_fs:
                 target_fs.write(source_fs.read())
 
     # write new prom frigga yaml
     print_msg(
-        msg_content=f"Writing the new metrics_relabel_configs to {prom_yaml_path}")
+        msg_content=f"Writing the new metrics_relabel_configs to {prom_yaml_path}"  # noqa: 501
+    )
     with open(prom_yaml_path, 'w') as fs:
-        data = yaml.dump_all(
+        yaml.dump_all(
             documents=[prom_doc, frigga_doc],
             stream=fs, default_flow_style=False,
             Dumper=noalias_dumper,
             indent=2
         )
-    print_msg(
-        msg_content=f"Done! Now reload {prom_yaml_path} with 'frigga pr -u http://localhost:9090'")
+    msg = f"Done! Now reload {prom_yaml_path} with 'frigga pr -u http://localhost:9090'"  # noqa: 501
+    print_msg(msg_content=msg)
+    return msg
 
 
 def reload_prom(prom_url="http://localhost:9090", raw=False):
@@ -128,13 +138,19 @@ def reload_prom(prom_url="http://localhost:9090", raw=False):
     url = f"{prom_url}{api_path}"
     response = requests.post(url, allow_redirects=True)
     if 200 <= response.status_code < 204:
+        data = response.status_code
         if raw:
-            print(response.status_code)
+            print(data)
+            return data
         else:
             print_msg(
                 msg_content=f"Successfully reloaded Prometheus - {url}",
                 msg_type='log'
             )
+            return {
+                "status": data,
+                "prom_url": url
+            }
     else:
         print_msg(
             msg_content=f"Failed to reload Prometheus - {url}, have you provided the '--web.enable-admin-api' in Prometheus?",  # noqa:501
@@ -152,11 +168,17 @@ def get_total_dataseries(prom_url="http://localhost:9090", raw=False):
     query_string_parameters = f"query={query}&start={timestamp}"
     url = f"{target_url}?{query_string_parameters}"
 
-    response = requests.get(url, allow_redirects=True)
+    try:
+        response = requests.get(url, allow_redirects=True)
+    except Exception as error:
+        print_msg(
+            msg_content=error.__str__(),
+            msg_type='error'
+        )
     if 200 <= response.status_code < 204:
-        resp = response.json()
         try:
-            data = resp['data']['result'][0]['value'][1]
+            resp = response.json()
+            data = int(resp['data']['result'][0]['value'][1])
         except Exception as e:
             print_msg(
                 msg_content=f"Unknown response\n{e}",
@@ -165,11 +187,13 @@ def get_total_dataseries(prom_url="http://localhost:9090", raw=False):
             )
         if raw:
             print(data)
+            return data
         else:
             print_msg(
                 msg_content=f"Total number of data-series: {data}",
                 msg_type='log'
             )
+            return {"num_data_series": data}
     else:
         print_msg(
             msg_content=f"Failed to get total number of data-series. Is Prometheus reachable? - {url}",  # noqa:501

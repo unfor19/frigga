@@ -29,7 +29,14 @@ grafana_update_admin_password(){
 network=$(docker network ls | grep frigga_net || true)
 [[ -n "$network" ]] && echo "ERROR: wait for network to be deleted, docker network ls, or restart docker daemon" && exit
 cp docker-compose/prometheus-original.yml docker-compose/prometheus.yml
-docker-compose --project-name frigga \
+
+# fixed permissions denied when frigga tries to change prometheus.yml
+chmod 777 docker-compose/prometheus.yml
+
+_DOCKER_TAG="${DOCKER_TAG:-"unfor19/frigga:latest"}"
+echo "DOCKER_TAG=${_DOCKER_TAG}" > .env.ci
+
+docker-compose --project-name frigga --env-file .env.ci \
     --file docker-compose/docker-compose.yml \
     up --detach
 
