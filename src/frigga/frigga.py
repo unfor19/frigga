@@ -247,3 +247,9 @@ def client_start(use_http, **kwargs):
         run_websocket_client(kwargs)
     else:
         run_client(kwargs)
+
+
+@cli.command()
+def version():
+    from .__init__ import __version__ as version
+    print(version)
