@@ -4,6 +4,9 @@ on:
   release:
     types: [published, edited]
 
+env:
+  APP_NAME: frigga
+
 jobs:
   docker_build:
     runs-on: ubuntu-latest
@@ -16,7 +19,7 @@ jobs:
         run: |
           export RELEASE_VERSION=${GITHUB_REF_SLUG}
           echo "RELEASE_VERSION=${RELEASE_VERSION}" >> $GITHUB_ENV
-          export _DOCKER_TAG=docker.pkg.github.com/${GITHUB_REPOSITORY}/frigga:test-${RELEASE_VERSION//\//-}
+          export _DOCKER_TAG=docker.pkg.github.com/${GITHUB_REPOSITORY}/${APP_NAME}:test-${RELEASE_VERSION//\//-}
           echo "DOCKER_TAG=${_DOCKER_TAG}" >> $GITHUB_ENV
       - name: docker login
         run: |
@@ -35,7 +38,6 @@ jobs:
     needs: docker_build
     runs-on: ubuntu-latest
     env:
-      APP_NAME: frigga
       RELEASE_REF: ${{ github.ref }}
     steps:
       - uses: actions/checkout@v2
@@ -50,7 +52,7 @@ jobs:
           export RELEASE_VERSION=${GITHUB_REF_SLUG}
           echo -n $RELEASE_VERSION > ./version
           echo "RELEASE_VERSION=${RELEASE_VERSION}" >> $GITHUB_ENV
-          export _DOCKER_TAG=docker.pkg.github.com/${GITHUB_REPOSITORY}/frigga:test-${RELEASE_VERSION//\//-}
+          export _DOCKER_TAG=docker.pkg.github.com/${GITHUB_REPOSITORY}/${APP_NAME}:test-${RELEASE_VERSION//\//-}
           echo "DOCKER_TAG=${_DOCKER_TAG}" >> $GITHUB_ENV
       - name: Validate Release Version
         run: |
@@ -65,13 +67,13 @@ jobs:
           echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u $GITHUB_ACTOR --password-stdin
       - name: docker pull
         run: |
-          docker pull "$DOCKER_TAG"          
+          docker pull "$DOCKER_TAG"
       - name: Test - Deploy Stack
         env:
           FRIGGA_TESTING: true
         run: bash docker-compose/deploy_stack.sh
       - name: Test - Apply Changes
-        run: bash docker-compose/apply_changes.sh  
+        run: bash docker-compose/apply_changes.sh
       - name: Build Package
         run: |
           pip install twine==3.1.1
@@ -88,7 +90,7 @@ jobs:
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         run: |
-          echo "DOCKERHUB_TAG=${DOCKER_USERNAME}/${GITHUB_REPOSITORY}:${RELEASE_VERSION}" >> $GITHUB_ENV
+          echo "DOCKERHUB_TAG=${DOCKER_USERNAME}/${APP_NAME}:${RELEASE_VERSION}" >> $GITHUB_ENV
       - name: Build Docker Image
         run: |
           docker build . --file Dockerfile --tag "${DOCKERHUB_TAG}"
