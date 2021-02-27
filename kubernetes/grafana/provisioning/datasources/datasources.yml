@@ -13,3 +13,8 @@ datasources:
     isDefault: true
     url: http://prometheus.default.svc.cluster.local:9090
     editable: false
+  - name: VictoriaMetrics
+    type: prometheus
+    access: proxy
+    url: http://victoriametrics-tsdb.default.svc.cluster.local:8428
+    isDefault: false
