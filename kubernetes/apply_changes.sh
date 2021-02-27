@@ -22,6 +22,7 @@ GRAFANA_API_KEY=$(curl -s -X POST -sL --user admin:admin -H "Content-Type: appli
 python3 -m pip install --upgrade pip
 python3 -m pip install -r requirements.txt
 python3 -m pip install .
+frigga version
 
 echo ">> [LOG] Check num of dataseries before"
 num_series_before=$(frigga pg -r -u "$PROMETHEUS_HOST")
