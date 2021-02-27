@@ -14,7 +14,6 @@ error_msg(){
 [[ -z "${GRAFANA_API_KEY}" ]] && error_msg ".apikey file is empty"
 
 _DOCKER_TAG="${DOCKER_TAG:-"unfor19/frigga:latest"}"
-docker run --rm -t "$_DOCKER_TAG" version
 
 docker run --rm -t --network host "$_DOCKER_TAG" \
     client-start --grafana-url http://grafana:3000 \

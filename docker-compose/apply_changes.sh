@@ -14,8 +14,6 @@ error_msg(){
 
 [[ -z "${GRAFANA_API_KEY}" ]] && error_msg ".apikey file is empty"
 
-frigga version
-
 num_series_before=$(frigga pg -u "$PROMETHEUS_HOST" -r)
 
 # Generate .metrics.json
