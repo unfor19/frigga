@@ -65,6 +65,7 @@ Commands:
   prometheus-apply   Alias: pa Applies .metrics.json for a given...
   prometheus-get     Alias: pg Get total number of data series
   prometheus-reload  Alias: pr Reload Prometheus
+  version
   webserver-start    Alias: ws Runs a webserver that will execute frigga's...
 ```
 
