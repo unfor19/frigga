@@ -31,11 +31,11 @@ jobs:
           FRIGGA_TESTING: true
         run: bash docker-compose/deploy_stack.sh
       - name: Test - Apply Changes
-        run: bash docker-compose/apply_changes.sh          
+        run: bash docker-compose/apply_changes.sh
       - name: Build Docker Image
         run: |
           echo -n 99.99.99 > ./version
-          docker build . --file Dockerfile --tag "${DOCKER_TAG}"
+          docker build . --file Dockerfile --tag "${DOCKER_TAG}" --build-arg GITHUB_SHA=$GITHUB_SHA
       - name: Push to DockerHub
         run: |
           echo '${{ secrets.DOCKER_PASSWORD }}' | docker login --username ${{ secrets.DOCKER_USERNAME }} --password-stdin
