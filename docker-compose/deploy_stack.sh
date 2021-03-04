@@ -72,6 +72,8 @@ deploy(){
 post_deploy(){
     grafana_update_admin_password
     generate_apikey
+    echo ">> [LOG] Sleeping for 15 seconds ..."
+    sleep 15
 }
 
 
