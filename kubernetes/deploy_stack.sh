@@ -21,10 +21,10 @@ kubectl apply \
     -f kubernetes/exporters.yml \
     -f kubernetes/monitoring.yml
 
-GRAFANA_HOST="http://grafana.default.svc.cluster.local:3000"
-PROMETHEUS_HOST="http://prometheus.default.svc.cluster.local:9090"
-NODEEXPORTER_HOST="http://node-exporter.default.svc.cluster.local:9100"
-CONTAINEREXPORTER_HOST="http://container-exporter.default.svc.cluster.local:9104"
+GRAFANA_HOST="http://grafana.default.svc.cluster.local:3000/api/health"
+PROMETHEUS_HOST="http://prometheus.default.svc.cluster.local:9090/-/ready"
+NODEEXPORTER_HOST="http://node-exporter.default.svc.cluster.local:9100/metrics"
+CONTAINEREXPORTER_HOST="http://container-exporter.default.svc.cluster.local:9104/metrics"
 
 kubectl exec "$POD_DEBUG" -- bash /root/frigga/.frigga/scripts/wait_for_endpoints.sh "$GRAFANA_HOST" "$PROMETHEUS_HOST" "$NODEEXPORTER_HOST" "$CONTAINEREXPORTER_HOST"
 echo ">> [LOG] Ready to apply changes!"
