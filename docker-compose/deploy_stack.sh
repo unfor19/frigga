@@ -40,17 +40,4 @@ docker-compose --project-name frigga --env-file .env.ci \
     --file docker-compose/docker-compose.yml \
     up --detach
 
-echo ">> Waiting for Grafana to be ready ..."
-counter=0
-until [ $counter -gt 6 ]; do
-    response=$(curl -s http://admin:admin@localhost:3000/api/health | jq -r .database || true)
-    if [[  $response == "ok" ]]; then
-        echo ">> Grafana is ready!"
-        grafana_update_admin_password
-        generate_apikey
-        exit 0
-    else
-        sleep 10
-        counter=$((counter+1))
-    fi
-done
+source docker-compose/wait_for_endpoints.sh
