@@ -66,7 +66,7 @@ jobs:
         run: |
           echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
           docker pull "${{ matrix.GHCR_CACHED_TAG_PREFIX }}-${TARGET_APP}"
-          docker tag "${{ matrix.GHCR_CACHED_TAG_PREFIX }}-${TARGET_APP}" ${DOCKERHUB_TAG}
+          docker tag "${{ matrix.GHCR_CACHED_TAG_PREFIX }}-${TARGET_APP}" "${{ matrix.DOCKERHUB_TAG }}
           echo "DOCKER_TAG=${DOCKERHUB_TAG}" >> $GITHUB_ENV
       - name: Install CLI
         run: |
