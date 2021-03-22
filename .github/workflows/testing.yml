@@ -67,7 +67,7 @@ jobs:
           echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
           docker pull "${{ matrix.GHCR_CACHED_TAG_PREFIX }}-${TARGET_APP}"
           docker tag "${{ matrix.GHCR_CACHED_TAG_PREFIX }}-${TARGET_APP}" "${{ matrix.DOCKERHUB_TAG }}"
-          echo "DOCKER_TAG="${{ matrix.DOCKERHUB_TAG }}" >> $GITHUB_ENV
+          echo "DOCKER_TAG=${{ matrix.DOCKERHUB_TAG }}" >> $GITHUB_ENV
       - name: Install CLI
         run: |
           sudo apt remove python3-pip
