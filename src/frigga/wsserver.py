@@ -51,7 +51,7 @@ async def msg(websocket, path):
     print(f"Sent back: {message}")
 
 
-def run_wss(port=8084, debug=False):
+def run_wss(port=8085, debug=False):
     start_server = websockets.serve(msg, "0.0.0.0", port)
     asyncio.get_event_loop().run_until_complete(start_server)
     asyncio.get_event_loop().run_forever()

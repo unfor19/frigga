@@ -161,7 +161,7 @@ def prometheus_get(prom_url, raw):
 )
 @click.option(
     '--port', '-p',
-    default=8084,
+    default=8085,
     prompt=False, required=False, type=int
 )
 @click.option(
@@ -213,7 +213,7 @@ By default:\n
 )
 @click.option(
     '--frigga-url', '-gurl',
-    default='ws://localhost:8084',
+    default='ws://localhost:8085',
     required=False, type=str
 )
 @click.option(

@@ -1,56 +1,73 @@
 name: testing
 on: push
+
+env:
+  TARGET_BASE: build
+  TARGET_APP: app
+  DOCKER_BUILDKIT: 1
+
 jobs:
-  docker_build:
-    runs-on: ubuntu-latest
+  docker-build:
     name: docker build
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        include:
+          - GHCR_CACHED_TAG_PREFIX: "ghcr.io/unfor19/frigga:latest"
+            DOCKERFILE_PATH: Dockerfile
     steps:
       - uses: actions/checkout@v2
-      - name: Inject slug/short variables
-        uses: rlespinasse/github-slug-action@v3.x
-      - name: Set env vars
+      - name: docker login ghcr
         run: |
-          export BRANCH_NAME=${{ env.GITHUB_REF_SLUG }}
-          [[ $BRANCH_NAME = "master" ]] && export BRANCH_NAME=master-test
-          echo DOCKER_TAG=docker.pkg.github.com/${GITHUB_REPOSITORY}/${BRANCH_NAME//\//-}:test >> $GITHUB_ENV
-      - name: docker login
+          echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
+      - name: docker pull cached
         run: |
-          echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u $GITHUB_ACTOR --password-stdin
-      - name: docker pull
+          docker pull "${{ matrix.GHCR_CACHED_TAG_PREFIX }}-${TARGET_BASE}" || true
+          docker pull "${{ matrix.GHCR_CACHED_TAG_PREFIX }}-${TARGET_APP}" || true
+      - name: docker build cached
         run: |
-          docker pull "$DOCKER_TAG" || true
-      - name: docker build
-        run: docker build . -t cached --cache-from="$DOCKER_TAG" --build-arg GITHUB_SHA=$GITHUB_SHA
-      - name: docker tag
-        run: docker tag cached "$DOCKER_TAG"
-      - name: docker push
-        run: docker push "$DOCKER_TAG" || true
-
+          docker build . -t "cached-${TARGET_BASE}" \
+            --cache-from="${{ matrix.GHCR_CACHED_TAG_PREFIX }}-${TARGET_BASE}" \
+            -f "${{ matrix.DOCKERFILE_PATH }}" \
+            --target "${TARGET_BASE}" \
+            --build-arg BUILDKIT_INLINE_CACHE=1
+          docker build . -t "cached-${TARGET_APP}" \
+            --cache-from="${{ matrix.GHCR_CACHED_TAG_PREFIX }}-${TARGET_APP}" \
+            -f "${{ matrix.DOCKERFILE_PATH }}" \
+            --target "${TARGET_APP}" \
+            --build-arg BUILDKIT_INLINE_CACHE=1
+      - name: docker tag cached
+        run: |
+          docker tag "cached-${TARGET_BASE}" "${{ matrix.GHCR_CACHED_TAG_PREFIX }}-${TARGET_BASE}"
+          docker tag "cached-${TARGET_APP}"  "${{ matrix.GHCR_CACHED_TAG_PREFIX }}-${TARGET_APP}"
+      - name: docker push cached to ghcr
+        env:
+          GITHUB_TOKEN: "${{ secrets.GHTOKEN_PUSH_PKG }}"
+        run: |
+          docker push "${{ matrix.GHCR_CACHED_TAG_PREFIX }}-${TARGET_BASE}"
+          docker push "${{ matrix.GHCR_CACHED_TAG_PREFIX }}-${TARGET_APP}"
   ubuntu-cli:
-    needs: docker_build
+    needs: docker-build
     runs-on: ubuntu-latest
     strategy:
       matrix:
         python-version: [3.6, 3.7, 3.8, 3.9]
+        include:
+          - GHCR_CACHED_TAG_PREFIX: "ghcr.io/unfor19/frigga:latest"
+            DOCKERFILE_PATH: Dockerfile
+            DOCKERHUB_TAG: "unfor19/frigga:latest"
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v1
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Inject slug/short variables
-        uses: rlespinasse/github-slug-action@v3.x
-      - name: Set env vars
+      - name: docker pull cached from ghcr
         run: |
-          export BRANCH_NAME=${{ env.GITHUB_REF_SLUG }}
-          [[ $BRANCH_NAME = "master" ]] && export BRANCH_NAME=master-test
-          echo DOCKER_TAG=docker.pkg.github.com/${GITHUB_REPOSITORY}/${BRANCH_NAME//\//-}:test >> $GITHUB_ENV
-      - name: docker login
-        run: |
-          echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u $GITHUB_ACTOR --password-stdin
-      - name: docker pull
-        run: |
-          docker pull "$DOCKER_TAG"
+          echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
+          docker pull "${{ matrix.GHCR_CACHED_TAG_PREFIX }}-${TARGET_APP}"
+          docker tag "${{ matrix.GHCR_CACHED_TAG_PREFIX }}-${TARGET_APP}" "${{ matrix.DOCKERHUB_TAG }}"
+          echo "DOCKER_TAG=${{ matrix.DOCKERHUB_TAG }}" >> $GITHUB_ENV
       - name: Install CLI
         run: |
           sudo apt remove python3-pip
@@ -64,55 +81,51 @@ jobs:
         run: ./docker-compose/apply_changes.sh
 
   ubuntu-webserver:
-    needs: docker_build
+    needs: docker-build
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - GHCR_CACHED_TAG_PREFIX: "ghcr.io/unfor19/frigga:latest"
+            DOCKERFILE_PATH: Dockerfile
+            DOCKERHUB_TAG: "unfor19/frigga:latest"
     steps:
       - uses: actions/checkout@v2
-      - name: Inject slug/short variables
-        uses: rlespinasse/github-slug-action@v3.x
-      - name: Set env vars
+      - name: docker pull cached from ghcr
         run: |
-          export BRANCH_NAME=${{ env.GITHUB_REF_SLUG }}
-          [[ $BRANCH_NAME = "master" ]] && export BRANCH_NAME=master-test
-          echo DOCKER_TAG=docker.pkg.github.com/${GITHUB_REPOSITORY}/${BRANCH_NAME//\//-}:test >> $GITHUB_ENV
-      - name: docker login
-        run: |
-          echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u $GITHUB_ACTOR --password-stdin
-      - name: docker pull
-        run: |
-          docker pull "$DOCKER_TAG"
+          echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
+          docker pull "${{ matrix.GHCR_CACHED_TAG_PREFIX }}-${TARGET_APP}"
+          docker tag "${{ matrix.GHCR_CACHED_TAG_PREFIX }}-${TARGET_APP}" "${{ matrix.DOCKERHUB_TAG }}"
+          echo "DOCKER_TAG=${{ matrix.DOCKERHUB_TAG }}" >> $GITHUB_ENV
       - name: Deploy Stack
         env:
           FRIGGA_TESTING: true
         run: bash docker-compose/deploy_stack.sh
       - name: Apply Changes
         run: ./docker-compose/apply_changes_webserver.sh
-
   ubuntu-websocket:
-    needs: docker_build
+    needs: docker-build
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - GHCR_CACHED_TAG_PREFIX: "ghcr.io/unfor19/frigga:latest"
+            DOCKERFILE_PATH: Dockerfile
+            DOCKERHUB_TAG: "unfor19/frigga:latest"
     steps:
       - uses: actions/checkout@v2
-      - name: Inject slug/short variables
-        uses: rlespinasse/github-slug-action@v3.x
-      - name: Set env vars
+      - name: docker pull cached from ghcr
         run: |
-          export BRANCH_NAME=${{ env.GITHUB_REF_SLUG }}
-          [[ $BRANCH_NAME = "master" ]] && export BRANCH_NAME=master-test
-          echo DOCKER_TAG=docker.pkg.github.com/${GITHUB_REPOSITORY}/${BRANCH_NAME//\//-}:test >> $GITHUB_ENV
-      - name: docker login
-        run: |
-          echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u $GITHUB_ACTOR --password-stdin
-      - name: docker pull
-        run: |
-          docker pull "$DOCKER_TAG"
+          echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
+          docker pull "${{ matrix.GHCR_CACHED_TAG_PREFIX }}-${TARGET_APP}"
+          docker tag "${{ matrix.GHCR_CACHED_TAG_PREFIX }}-${TARGET_APP}" "${{ matrix.DOCKERHUB_TAG }}"
+          echo "DOCKER_TAG=${{ matrix.DOCKERHUB_TAG }}" >> $GITHUB_ENV
       - name: Deploy Stack
         env:
           FRIGGA_TESTING: true
         run: bash docker-compose/deploy_stack.sh
       - name: Apply Changes
         run: ./docker-compose/apply_changes_websocket.sh
-
   minikube:
     runs-on: ubuntu-latest
     steps:
