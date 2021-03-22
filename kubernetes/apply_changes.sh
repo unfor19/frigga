@@ -37,8 +37,8 @@ frigga pa -ppath kubernetes/prometheus-original.yml -mjpath .metrics.json
 # Reload prometheus
 frigga pr -u "$PROMETHEUS_HOST"
 
-echo ">> [LOG] Sleeping for 10 seconds ..."
-sleep 10
+echo ">> [LOG] Sleeping for 15 seconds ..."
+sleep 15
 
 # Comparing results
 num_series_after=$(frigga pg -r -u "$PROMETHEUS_HOST")
