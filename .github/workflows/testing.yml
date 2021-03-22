@@ -20,7 +20,7 @@ jobs:
         run: |
           docker pull "$DOCKER_TAG" || true
       - name: docker build
-        run: docker build . -t cached --cache-from="$DOCKER_TAG" --build-arg GITHUB_SHA=$GITHUB_SHA
+        run: docker build . -t cached --cache-from="$DOCKER_TAG"
       - name: docker tag
         run: docker tag cached "$DOCKER_TAG"
       - name: docker push

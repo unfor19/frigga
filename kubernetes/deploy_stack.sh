@@ -15,16 +15,10 @@ echo ">> [LOG] Debug pod is ready!"
 POD_DEBUG=$(kubectl get pods | grep debug.*Running | cut -f 1 -d " ")
 
 # Copy from `.frigga/` to debug pod
-kubectl cp .frigga/ default/"${POD_DEBUG}":/root/frigga/
+kubectl cp .frigga/ default/$POD_DEBUG:/root/frigga/
 
 kubectl apply \
     -f kubernetes/exporters.yml \
     -f kubernetes/monitoring.yml
-
-GRAFANA_HOST="http://grafana.default.svc.cluster.local:3000/api/health"
-PROMETHEUS_HOST="http://prometheus.default.svc.cluster.local:9090/-/ready"
-NODEEXPORTER_HOST="http://node-exporter.default.svc.cluster.local:9100/metrics"
-CONTAINEREXPORTER_HOST="http://container-exporter.default.svc.cluster.local:9104/metrics"
-
-kubectl exec "$POD_DEBUG" -- bash /root/frigga/.frigga/scripts/wait_for_endpoints.sh "$GRAFANA_HOST" "$PROMETHEUS_HOST" "$NODEEXPORTER_HOST" "$CONTAINEREXPORTER_HOST"
+kubectl exec $POD_DEBUG -- bash /root/frigga/.frigga/kubernetes/wait-for-endpoints.sh
 echo ">> [LOG] Ready to apply changes!"

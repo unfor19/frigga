@@ -253,15 +253,4 @@ def client_start(use_http, **kwargs):
 def version():
     """Print the installed version"""
     from .__init__ import __version__ as version
-    from .__init__ import __short_commit__ as short_commit
-
-    if version == "99.99.99":
-        version = "docker"
-    elif version == "0.0.1":
-        version = "local"
-
-    if short_commit == "abcd123":
-        short_commit = "unknown_commit_hash"
-
-    msg = f"{version} {short_commit}"
-    print(msg)
+    print(version)

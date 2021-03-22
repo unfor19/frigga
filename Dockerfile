@@ -40,9 +40,6 @@ RUN pip install -r "requirements.txt" --no-warn-script-location --prefix="/dist"
 # Copy the application from Docker build context to WORKDIR
 COPY . .
 
-ARG GITHUB_SHA
-ENV GITHUB_SHA=${GITHUB_SHA}
-
 # Build the application, validate wheel contents and install the application
 RUN \
     python setup.py bdist_wheel && \
