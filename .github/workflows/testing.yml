@@ -79,30 +79,30 @@ jobs:
         run: bash docker-compose/deploy_stack.sh
       - name: Apply Changes
         run: ./docker-compose/apply_changes.sh
-  # ubuntu-webserver:
-  #   needs: docker-build
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     - name: Inject slug/short variables
-  #       uses: rlespinasse/github-slug-action@v3.x
-  #     - name: Set env vars
-  #       run: |
-  #         export BRANCH_NAME=${{ env.GITHUB_REF_SLUG }}
-  #         [[ $BRANCH_NAME = "master" ]] && export BRANCH_NAME=master-test
-  #         echo DOCKER_TAG=docker.pkg.github.com/${GITHUB_REPOSITORY}/${BRANCH_NAME//\//-}:test >> $GITHUB_ENV
-  #     - name: docker login
-  #       run: |
-  #         echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u $GITHUB_ACTOR --password-stdin
-  #     - name: docker pull
-  #       run: |
-  #         docker pull "$DOCKER_TAG"
-  #     - name: Deploy Stack
-  #       env:
-  #         FRIGGA_TESTING: true
-  #       run: bash docker-compose/deploy_stack.sh
-  #     - name: Apply Changes
-  #       run: ./docker-compose/apply_changes_webserver.sh
+
+  ubuntu-webserver:
+    needs: docker-build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - GHCR_CACHED_TAG_PREFIX: "ghcr.io/unfor19/frigga:latest"
+            DOCKERFILE_PATH: Dockerfile
+            DOCKERHUB_TAG: "unfor19/frigga:latest"
+    steps:
+      - uses: actions/checkout@v2
+      - name: docker pull cached from ghcr
+        run: |
+          echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
+          docker pull "${{ matrix.GHCR_CACHED_TAG_PREFIX }}-${TARGET_APP}"
+          docker tag "${{ matrix.GHCR_CACHED_TAG_PREFIX }}-${TARGET_APP}" "${{ matrix.DOCKERHUB_TAG }}"
+          echo "DOCKER_TAG=${{ matrix.DOCKERHUB_TAG }}" >> $GITHUB_ENV
+      - name: Deploy Stack
+        env:
+          FRIGGA_TESTING: true
+        run: bash docker-compose/deploy_stack.sh
+      - name: Apply Changes
+        run: ./docker-compose/apply_changes_webserver.sh
   # ubuntu-websocket:
   #   needs: docker-build
   #   runs-on: ubuntu-latest
