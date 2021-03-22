@@ -57,10 +57,10 @@ services:
     command:
       - "webserver-start"
       - "--port"
-      - "8084"
+      - "8085"
       - "--debug"
     ports:
-      - 8084:8084
+      - 8085:8085
     depends_on:
       - prometheus
     networks:
