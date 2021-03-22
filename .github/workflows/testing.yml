@@ -46,39 +46,39 @@ jobs:
         run: |
           docker push "${{ matrix.GHCR_CACHED_TAG_PREFIX }}-${TARGET_BASE}"
           docker push "${{ matrix.GHCR_CACHED_TAG_PREFIX }}-${TARGET_APP}"
-  # ubuntu-cli:
-  #   needs: docker-build
-  #   runs-on: ubuntu-latest
-  #   strategy:
-  #     matrix:
-  #       python-version: [3.6, 3.7, 3.8, 3.9]
-  #       include:
-  #         - GHCR_CACHED_TAG_PREFIX: "ghcr.io/unfor19/frigga:latest"
-  #           DOCKERFILE_PATH: Dockerfile
-  #           DOCKERHUB_TAG: "unfor19/frigga:latest"
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     - name: Set up Python ${{ matrix.python-version }}
-  #       uses: actions/setup-python@v1
-  #       with:
-  #         python-version: ${{ matrix.python-version }}
-  #     - name: docker pull cached from ghcr
-  #       run: |
-  #         echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
-  #         docker pull "${{ matrix.GHCR_CACHED_TAG_PREFIX }}-${TARGET_APP}"
-  #         docker tag "${{ matrix.GHCR_CACHED_TAG_PREFIX }}-${TARGET_APP}" ${DOCKERHUB_TAG}
-  #         echo "DOCKER_TAG=${DOCKERHUB_TAG}" >> $GITHUB_ENV
-  #     - name: Install CLI
-  #       run: |
-  #         sudo apt remove python3-pip
-  #         python -m pip install --upgrade pip
-  #         pip install .
-  #     - name: Deploy Stack
-  #       env:
-  #         FRIGGA_TESTING: true
-  #       run: bash docker-compose/deploy_stack.sh
-  #     - name: Apply Changes
-  #       run: ./docker-compose/apply_changes.sh
+  ubuntu-cli:
+    needs: docker-build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.6, 3.7, 3.8, 3.9]
+        include:
+          - GHCR_CACHED_TAG_PREFIX: "ghcr.io/unfor19/frigga:latest"
+            DOCKERFILE_PATH: Dockerfile
+            DOCKERHUB_TAG: "unfor19/frigga:latest"
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: docker pull cached from ghcr
+        run: |
+          echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
+          docker pull "${{ matrix.GHCR_CACHED_TAG_PREFIX }}-${TARGET_APP}"
+          docker tag "${{ matrix.GHCR_CACHED_TAG_PREFIX }}-${TARGET_APP}" ${DOCKERHUB_TAG}
+          echo "DOCKER_TAG=${DOCKERHUB_TAG}" >> $GITHUB_ENV
+      - name: Install CLI
+        run: |
+          sudo apt remove python3-pip
+          python -m pip install --upgrade pip
+          pip install .
+      - name: Deploy Stack
+        env:
+          FRIGGA_TESTING: true
+        run: bash docker-compose/deploy_stack.sh
+      - name: Apply Changes
+        run: ./docker-compose/apply_changes.sh
   # ubuntu-webserver:
   #   needs: docker-build
   #   runs-on: ubuntu-latest
