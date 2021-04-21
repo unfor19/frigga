@@ -9,6 +9,7 @@ sleep_seconds = float(env['SLEEP_SECONDS']) if 'SLEEP_SECONDS' in env else 15  #
 def prometheus_get(kwargs):
     api_path = "/prometheus/get"
     url = f"{kwargs['frigga_url']}{api_path}"
+    url = os.path.normpath(url)
     resp = requests.get(
         url=url,
         params={
