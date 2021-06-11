@@ -2,7 +2,6 @@
 ### Docker Build Arguments
 ### Available only during Docker build - `docker build --build-arg ...`
 ### --------------------------------------------------------------------
-ARG DEBIAN_VERSION="buster"
 ARG ALPINE_VERSION="3.13"
 ARG PYTHON_VERSION="3.9.1"
 ARG APP_NAME="frigga"
@@ -17,7 +16,7 @@ ARG APP_GROUP_ID="1000"
 ### --------------------------------------------------------------------
 ### Build Stage
 ### --------------------------------------------------------------------
-FROM python:"$PYTHON_VERSION"-slim-"${DEBIAN_VERSION}" as build
+FROM python:"$PYTHON_VERSION"-alpine"${ALPINE_VERSION}" as build
 
 ARG APP_PYTHON_USERBASE
 
@@ -35,7 +34,7 @@ WORKDIR "$APP_PYTHON_USERBASE"
 
 # Copy and install requirements - better caching
 COPY requirements.txt .
-RUN pip install -r "requirements.txt" --no-warn-script-location --prefix="/dist"
+RUN pip install -r "requirements.txt" --no-warn-script-location
 
 # Copy the application from Docker build context to WORKDIR
 COPY . .
