@@ -60,13 +60,13 @@ Options:
   --help     Show this message and exit.
 
 Commands:
-  client-start       Alias: cs Runs a WebSockets client, to use HTTP, add...
-  grafana-list       Alias: gl Provide Grafana URL and Grafana API Key...
-  prometheus-apply   Alias: pa Applies .metrics.json for a given...
-  prometheus-get     Alias: pg Get total number of data series
-  prometheus-reload  Alias: pr Reload Prometheus
+  client-start       Alias: cs
+  grafana-list       Alias: gl
+  prometheus-apply   Alias: pa
+  prometheus-get     Alias: pg
+  prometheus-reload  Alias: pr
   version            Print the installed version
-  webserver-start    Alias: ws Runs a webserver that will execute frigga's...
+  webserver-start    Alias: ws
 ```
 
 <!-- available_commands_end -->
