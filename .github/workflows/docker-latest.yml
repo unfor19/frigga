@@ -14,7 +14,7 @@ jobs:
     strategy:
       matrix:
         include:
-          - PYTHON_VERSION: "3.9"
+          - PYTHON_VERSION: "3.9.5"
             DOCKERFILE_PATH: Dockerfile
     env:
       PIP_NO_CACHE_DIR: 0
